@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">iTransantiago</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_paraderos">ParaderosActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_acerca">AcercaActivity</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="ruta">Ruta</string>
+    <string name="acerca_descripcion">
+<![CDATA[
+        <p><strong>iTransantiago</strong> utiliza datos públicos liberados por la <strong>Subsecretaría de Transportes del Gobierno de Chile</strong> bajo el formato General Transit Feed Specification (GTFS) y para el análisis de información de viajes se utiliza el motor de OpenTripPlanner.</p>
+	<p>Permite buscar las mejor ruta entre dos puntos con las combinaciones posibles entre el sistema de Metro y Transantiago, encontrar paradas más cercanas a tu localización actual y también guardar estas rutas y paraderos favoritos para consultas más rápidas.</p>
+]]>
+    </string>
+    <string name="title_activity_planificador">PlanificadorActivity</string>
+    <string name="title_activity_planificador_config">PlanificadorConfigActivity</string>
+    <string name="title_activity_recorridos">RecorridosActivity</string>
+    <string name="title_activity_recorridos_resultado">RecorridosResultado</string>
+
+</resources>

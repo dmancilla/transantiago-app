@@ -1,0 +1,9 @@
+SAVEPOINT dump;
+PRAGMA writable_schema=ON
+SELECT name, type, sql FROM sqlite_master WHERE tbl_name LIKE shellstatic() AND type=='table'  AND sql NOT NULL
+PRAGMA table_info("shapes");
+SELECT 'INSERT INTO ' || '"shapes"' || ' VALUES(' || quote("shape_id"), quote("shape_pt_lat"), quote("shape_pt_lon"), quote("shape_pt_sequence") || ')' FROM  "shapes"
+SELECT sql FROM sqlite_master WHERE sql NOT NULL  AND type IN ('index','trigger','view')  AND tbl_name LIKE shellstatic()
+PRAGMA writable_schema=OFF;
+RELEASE dump;
+SELECT COUNT(*) FROM shapes;

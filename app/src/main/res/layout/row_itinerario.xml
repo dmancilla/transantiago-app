@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="35dp"
+    android:background="@color/white"
+    android:orientation="horizontal">
+
+    <TextView
+        android:background="@drawable/cuadro_negro"
+        android:id="@+id/planificador_itinerario_idx"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="4dp"
+        android:layout_width="28dp"
+        android:gravity="center_horizontal|center_vertical"
+        android:textColor="@color/white"
+        android:text="1"
+        android:layout_height="28dp" />
+
+    <TextView
+        android:layout_marginTop="4dp"
+        android:id="@+id/planificador_itinerario_duracion"
+        android:layout_width="120dp"
+        android:textColor="@color/gray"
+        android:layout_marginLeft="10dp"
+        android:text="60 mins"
+        android:layout_height="30dp" />
+
+    <ImageView
+        android:id="@+id/planificador_itinerario_leg_1"
+        android:layout_marginTop="3dp"
+        android:background="@drawable/ico_walk"
+        android:layout_width="25dp"
+        android:layout_height="29dp" />
+
+    <ImageView
+        android:id="@+id/planificador_itinerario_leg_2"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="3dp"
+        android:background="@drawable/ico_bus"
+        android:layout_width="25dp"
+        android:layout_height="29dp" />
+
+    <ImageView
+        android:id="@+id/planificador_itinerario_leg_3"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="3dp"
+        android:background="@drawable/ico_walk"
+        android:layout_width="25dp"
+        android:layout_height="29dp" />
+
+    <ImageView
+        android:id="@+id/planificador_itinerario_leg_4"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="3dp"
+        android:background="@drawable/ico_subway"
+        android:layout_width="25dp"
+        android:layout_height="29dp" />
+
+    <ImageView
+        android:id="@+id/planificador_itinerario_leg_5"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="3dp"
+        android:background="@drawable/ico_walk"
+        android:layout_width="25dp"
+        android:layout_height="29dp" />
+
+</LinearLayout>

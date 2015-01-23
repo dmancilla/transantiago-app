@@ -1,0 +1,70 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="cl.magnesia.itransantiago.PlanificadorConfigActivity"
+    android:background="@color/green_background"
+    tools:ignore="MissingPrefix" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/green_header"
+        android:orientation="horizontal"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp" >
+
+        <Button
+            android:id="@+id/planificador_back"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/btn_cerrar"
+            android:onClick="onClick" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/header_logo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/logo_itransantiago" />
+
+            <TextView
+                android:id="@+id/header_titulo"
+                fontPath="fonts/TSInfReg.otf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="Itinerarios   "
+                android:textColor="@color/white"
+                android:textSize="24sp" />
+        </LinearLayout>
+    </RelativeLayout>
+    
+    <TextView
+        android:id="@+id/planificador_itinerarios_rutas"
+        android:background="@color/white"
+        android:paddingLeft="10dp"
+        android:layout_width="fill_parent"
+        android:gravity="center_vertical"
+        android:textColor="@color/black"
+        fontPath="fonts/TSInfReg.otf"
+        android:text="Encontramos 3 rutas posibles:"
+        android:layout_height="30dp" />
+    
+    <ListView
+        android:divider="@color/gray"
+        android:dividerHeight="1dp"
+        android:id="@+id/planificador_itinerarios"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"></ListView>
+
+</LinearLayout>

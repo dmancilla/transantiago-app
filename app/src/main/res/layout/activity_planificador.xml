@@ -1,0 +1,120 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="cl.magnesia.itransantiago.PlanificadorActivity"
+    tools:ignore="MissingPrefix" >
+
+    <RelativeLayout
+        android:id="@+id/planificador_menu"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/green_header"
+        android:orientation="horizontal"
+>
+
+        <Button
+            android:id="@+id/planificador_btn_buscar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/btn_buscar"
+            android:onClick="onClick"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/header_logo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/logo_itransantiago" />
+
+            <TextView
+                android:id="@+id/header_titulo"
+                fontPath="fonts/TSInfReg.otf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="iTransantiago"
+                android:textColor="@color/white"
+                android:textSize="24sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+
+    <fragment
+        android:id="@+id/planificador_mapa"
+        class="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/planificador_menu" />
+
+    <RelativeLayout
+        android:id="@+id/planificador_resultados"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_below="@id/planificador_menu"
+        android:background="@color/black_70">
+        
+        <Button
+            android:id="@+id/planificador_resultados_guardar"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="@drawable/btn_guardar"
+            android:gravity="center_vertical" />
+        
+        <ImageView
+            android:id="@+id/planificador_resultados_reloj"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="12dp"
+            android:layout_toRightOf="@id/planificador_resultados_guardar"
+            android:background="@drawable/reloj"
+            android:gravity="center_vertical" />
+
+        <TextView
+            android:id="@+id/planificador_resultados_duracion"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/planificador_resultados_reloj"
+            android:gravity="center_vertical"
+            android:text="60 minutos"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+        
+        <Button
+            android:id="@+id/planificador_btn_mas_rutas"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/btn_mas_rutas"
+            android:onClick="onClick" />
+        
+        <TextView
+            android:id="@+id/planificador_text_view_mas_rutas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@id/planificador_btn_mas_rutas"
+            android:layout_alignTop="@id/planificador_btn_mas_rutas"
+            android:background="@drawable/badge_circle"
+            android:text="8"
+            android:textColor="#FFF"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

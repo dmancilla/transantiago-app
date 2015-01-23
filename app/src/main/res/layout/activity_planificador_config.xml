@@ -1,0 +1,147 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="cl.magnesia.itransantiago.PlanificadorConfigActivity"
+    tools:ignore="MissingPrefix" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/green_header"
+        android:orientation="horizontal"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp" >
+
+        <Button
+            android:id="@+id/planificador_back"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/btn_cerrar"
+            android:onClick="onClick" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/header_logo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/logo_itransantiago" />
+
+            <TextView
+                android:id="@+id/header_titulo"
+                fontPath="fonts/TSInfReg.otf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="@string/ruta"
+                android:textColor="@color/white"
+                android:textSize="24sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/green_light"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/planificador_swap"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/btn_swap"
+                android:onClick="onClick" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp" >
+
+                <!-- origen -->
+
+                <EditText
+                    android:inputType="textNoSuggestions"
+                    android:id="@+id/planificador_origen"
+                    fontPath="fonts/TSMapLigera.otf"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@color/white"
+                    android:hint="Dirección de origen"
+                    android:paddingLeft="20dp"
+                    android:textColor="@color/black" />
+
+                <ImageView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/planificador_origen"
+                    android:src="@drawable/label_origen" />
+
+                <Button
+                    android:id="@+id/planificador_origen_gps"
+                    android:layout_width="30dp"
+                    android:layout_height="40dp"
+                    android:layout_alignRight="@id/planificador_origen"
+                    android:layout_alignTop="@id/planificador_origen"
+                    android:background="@drawable/btn_ubicacion"
+                    android:onClick="onClick" />
+
+                <!-- destino -->
+
+                <EditText
+                    android:inputType="textNoSuggestions"
+                    android:id="@+id/planificador_destino"
+                    fontPath="fonts/TSMapLigera.otf"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_below="@id/planificador_origen"
+                    android:background="@color/white"
+                    android:hint="Dirección de destino"
+                    android:paddingLeft="20dp"
+                    android:textColor="@color/black" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/planificador_destino"
+                    android:src="@drawable/label_destino" />
+
+                <Button
+                    android:id="@+id/planificador_destino_gps"
+                    android:layout_width="30dp"
+                    android:layout_height="40dp"
+                    android:layout_alignRight="@id/planificador_destino"
+                    android:layout_alignTop="@id/planificador_destino"
+                    android:background="@drawable/btn_ubicacion" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/btn_ok"
+            android:onClick="onClick" />
+    </LinearLayout>
+
+</LinearLayout>

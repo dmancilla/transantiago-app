@@ -1,0 +1,93 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="cl.magnesia.itransantiago.RecorridosActivityResultado"
+    tools:ignore="MissingPrefix" >
+
+    <RelativeLayout
+        android:id="@+id/planificador_menu"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/green_header"
+        android:orientation="horizontal"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp" >
+
+        <Button
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/btn_cerrar"
+            android:id="@+id/recorridos_back"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:onClick="onClick"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/header_logo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/logo_itransantiago" />
+
+            <TextView
+                android:id="@+id/header_titulo"
+                fontPath="fonts/TSInfReg.otf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="iTransantiago"
+                android:textColor="@color/white"
+                android:textSize="24sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+
+
+    <fragment
+        android:id="@+id/recorridos_mapa"
+        class="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/planificador_menu" />
+
+    <LinearLayout
+        android:id="@+id/recorridos_layout_direccion"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="10dp"
+        android:layout_width="fill_parent"
+        android:background="@color/black_70"
+        android:gravity="center_horizontal"
+        android:layout_gravity="center_horizontal"
+        android:onClick="onClick"
+        android:layout_below="@+id/planificador_menu"
+        android:layout_height="33dp">
+
+        <ImageView
+            android:layout_width="33dp"
+            android:background="@drawable/btn_invertir"
+            android:layout_height="33dp" />
+
+        <TextView
+            android:id="@+id/recorridos_direccion"
+            android:text="Dirección. Hacia ..."
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_height="33dp" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>
