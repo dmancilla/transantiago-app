@@ -1,20 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_height="48dp"
+    android:background="@color/white"
     >
 
     <TextView
-        android:id="@+id/note"
-        android:text="titulo"
+        android:id="@+id/marker_titulo"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:text="titulo"
+        android:textColor="@color/black"
+        android:textSize="14sp" />
 
     <TextView
-        android:layout_below="@+id/note"
-        android:text="descripcion"
-        android:id="@+id/note2"
+        android:id="@+id/marker_descripcion"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="18dp"
+        android:layout_below="@id/marker_titulo"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        android:text="descripcion"
+        android:textColor="@color/black"
+        android:textSize="12sp" />
+    
+    <Button
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="14dp"
+        android:layout_toRightOf="@id/marker_descripcion"
+        android:background="@drawable/info_window_bg"
+        android:text=">"
+        android:textColor="@color/marker_blue"
+        android:textSize="12sp" />
 
 </RelativeLayout>

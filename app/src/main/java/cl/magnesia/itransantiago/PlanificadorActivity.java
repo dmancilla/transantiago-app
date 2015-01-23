@@ -92,6 +92,12 @@ public class PlanificadorActivity extends FragmentActivity implements
             public View getInfoContents(Marker marker) {
                 View view = getLayoutInflater().inflate(R.layout.marker_info_window, null);
 
+                TextView textTitulo = (TextView) view.findViewById(R.id.marker_titulo);
+                textTitulo.setText(marker.getTitle());
+
+                TextView textDescripcion = (TextView) view.findViewById(R.id.marker_descripcion);
+                textDescripcion.setText(marker.getSnippet());
+
                 return view;
             }
         });
@@ -243,24 +249,28 @@ public class PlanificadorActivity extends FragmentActivity implements
             String mode = leg.getString("mode");
 
             String title = "";
+            String snippet = "";
             int color = 0;
             BitmapDescriptor bitmapDescriptor = null;
             float u = 0.0f;
             float v = 0.0f;
             if (mode.equals("WALK")) {
                 title = "Caminar";
+                snippet = String.format("Camine hasta %s", leg.getJSONObject("from").getString("name"));
                 color = colorWalk;
                 bitmapDescriptor = bitmapDescriptorWalk;
                 u = 1.0f;
                 v = 1.0f;
             } else if (mode.equals("BUS")) {
                 title = String.format("BUS %s", leg.getString("route"));
+                snippet = String.format("%s (%s)", leg.getJSONObject("from").getString("name"));
                 color = colorBus;
                 bitmapDescriptor = bitmapDescriptorBus;
                 u = 0.0f;
                 v = 1.0f;
             } else if (mode.equals("SUBWAY")) {
                 title = String.format("BUS %s", leg.getString("route"));
+                snippet = String.format("Metro %s", leg.getString("route"));
                 color = colorSubway;
                 bitmapDescriptor = bitmapDescriptorSubway;
                 u = 0.0f;
@@ -284,7 +294,7 @@ public class PlanificadorActivity extends FragmentActivity implements
 
             map.addMarker(new MarkerOptions()
                     .position(new LatLng(lat, lon)).title(title)
-                    .snippet("-")
+                    .snippet(snippet)
                     .icon(bitmapDescriptor).anchor(u, v));
         }
 
