@@ -136,8 +136,8 @@ public class PlanificadorConfigActivity extends Activity implements View.OnFocus
 			String origen = textOrigen.getText().toString();
 			String destino = textDestino.getText().toString();
 
-            // origen = "Vergara 471";
-            // destino = "Vicuña Mackenna 6000";
+            origen = "Vergara 471";
+            destino = "Vicuña Mackenna 6000";
 
 			if (0 == origen.length() && !origenGPS) {
 				Utils.errorDialog(this,
