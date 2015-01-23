@@ -41,23 +41,17 @@ import static cl.magnesia.itransantiago.Config.TAG;
 public class PlanificadorActivity extends FragmentActivity implements
 		LocationListener, GoogleMap.OnMyLocationChangeListener {
 
-	private GoogleMap map;
-    private RelativeLayout layoutResultados;
-
-    private TextView textViewDuracion;
-    private TextView textViewBadge;
-
-	private LocationManager locationManager;
-
-    private LatLng lastKnowLatLng;
-
 	private static final long MIN_TIME = 400;
 	private static final float MIN_DISTANCE = 1000;
-
 	private static final int colorWalk = Color.rgb(0, 172, 235);
 	private static final int colorBus = Color.rgb(116, 176, 19);
 	private static final int colorSubway = Color.rgb(227, 0, 0);
-
+	private GoogleMap map;
+    private RelativeLayout layoutResultados;
+    private TextView textViewDuracion;
+    private TextView textViewBadge;
+	private LocationManager locationManager;
+    private LatLng lastKnowLatLng;
     // estado
     private JSONArray itineraries;
     private JSONObject plan;
@@ -263,7 +257,8 @@ public class PlanificadorActivity extends FragmentActivity implements
                 v = 1.0f;
             } else if (mode.equals("BUS")) {
                 title = String.format("BUS %s", leg.getString("route"));
-                snippet = String.format("%s (%s)", leg.getJSONObject("from").getString("name"));
+                snippet = String.format("%s (%s)", leg.getJSONObject("from").getString("name"),
+                        leg.getJSONObject("from").getString("stopCode"));
                 color = colorBus;
                 bitmapDescriptor = bitmapDescriptorBus;
                 u = 0.0f;
