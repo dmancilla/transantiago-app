@@ -3,35 +3,29 @@ package cl.magnesia.itransantiago;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.TextView;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
-public class RecorridosActivity extends Activity {
+public class RecorridosActivity extends BaseActivity {
 
     private TextView textServicio;
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-
         setContentView(R.layout.activity_recorridos);
 
+        // header
+        TextView textView = (TextView)findViewById(R.id.header_titulo);
+        textView.setText("Recorridos");
 
 
         textServicio = (TextView) findViewById(R.id.recorridos_servicio);
@@ -44,7 +38,7 @@ public class RecorridosActivity extends Activity {
         {
 
             Log.d("iTransantiago", textServicio.getText().toString());
-            Intent intent = new Intent(this, RecorridosResultado.class);
+            Intent intent = new Intent(this, RecorridosResultadoActivity.class);
             intent.putExtra("SERVICIO", textServicio.getText().toString());
             startActivity(intent);
 

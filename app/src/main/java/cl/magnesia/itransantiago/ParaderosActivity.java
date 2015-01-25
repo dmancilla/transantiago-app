@@ -89,7 +89,7 @@ public class ParaderosActivity extends FragmentActivity {
 					.icon(bitmapDescriptor).title(paradero.nombre));
 					*/
 
-			MyItem item = new MyItem(paradero.lat, paradero.lon);
+			MyItem item = new MyItem(paradero.latLng.latitude, paradero.latLng.longitude);
 			mClusterManager.addItem(item);
 		}
 

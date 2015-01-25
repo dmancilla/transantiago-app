@@ -1,14 +1,20 @@
 package cl.magnesia.itransantiago.models;
 
+import com.google.android.gms.maps.model.LatLng;
+
 public class Paradero {
 
-	public String nombre;
-	public double lat, lon;
+    public String stopID;
+    public String name;
 
-	public Paradero(String nombre, double lat, double lon) {
-		this.nombre = nombre;
-		this.lat = lat;
-		this.lon = lon;
+    public LatLng latLng;
+
+	public Paradero(String stopID, String name, double lat, double lng) {
+
+        this.stopID = stopID;
+		this.name = name;
+
+        this.latLng = new LatLng(lat, lng);
 	}
 
 }

@@ -31,7 +31,7 @@ public class MyDatabase extends SQLiteAssetHelper {
         SQLiteDatabase db = getReadableDatabase();
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 
-        String[] sqlSelect = { "stop_name", "stop_lat", "stop_lon" };
+        String[] sqlSelect = { "stop_id", "stop_name", "stop_lat", "stop_lon" };
         String sqlTables = "stops";
 
         qb.setTables(sqlTables);
@@ -41,11 +41,12 @@ public class MyDatabase extends SQLiteAssetHelper {
         List<Paradero> paraderos = new ArrayList<Paradero>();
         while (cursor.moveToNext()) {
 
-            String nombre = cursor.getString(0);
-            double lat = cursor.getDouble(1);
-            double lon = cursor.getDouble(2);
+            String stopID = cursor.getString(0);
+            String name = cursor.getString(1);
+            double lat = cursor.getDouble(2);
+            double lon = cursor.getDouble(3);
 
-            Paradero paradero = new Paradero(nombre, lat, lon);
+            Paradero paradero = new Paradero(stopID, name, lat, lon);
             paraderos.add(paradero);
 
         }
@@ -124,6 +125,34 @@ public class MyDatabase extends SQLiteAssetHelper {
 
         return null;
 
+    }
+
+    public List<Paradero> getParaderosByTripId(String tripID)
+    {
+
+        SQLiteDatabase db = getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT stops.stop_id, stops.stop_name, stops.stop_lat, stops.stop_lon " +
+                        "FROM stop_times " +
+                        "LEFT JOIN trips ON stop_times.trip_id=trips.trip_id " +
+                        "LEFT JOIN stops ON stop_times.stop_id=stops.stop_id " +
+                        "WHERE trips.trip_id = ? " +
+                        "ORDER BY stop_times.stop_sequence",
+                new String[] { tripID });
+
+        List<Paradero> paraderos = new ArrayList<Paradero>();
+        while(cursor.moveToNext())
+        {
+            String stopID = cursor.getString(0);
+            String name = cursor.getString(1);
+            double lat = cursor.getDouble(2);
+            double lng = cursor.getDouble(3);
+
+            Paradero paradero = new Paradero(stopID, name, lat, lng);
+            paraderos.add(paradero);
+        }
+
+        return paraderos;
     }
 
     public List<LatLng> getShapeByTripId(String tripId)
