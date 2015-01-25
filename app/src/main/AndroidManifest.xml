@@ -89,7 +89,7 @@
             android:label="@string/title_activity_recorridos" >
         </activity>
         <activity
-            android:name=".RecorridosResultado"
+            android:name=".RecorridosResultadoActivity"
             android:label="@string/title_activity_recorridos_resultado" >
         </activity>
         <activity
