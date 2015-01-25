@@ -42,7 +42,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static cl.magnesia.itransantiago.Config.TAG;
 
-public class PlanificadorConfigActivity extends Activity implements View.OnFocusChangeListener {
+public class PlanificadorConfigActivity extends BaseActivity implements View.OnFocusChangeListener {
 
 	private Button buttonSwap;
 	private EditText textOrigen;
@@ -61,18 +61,21 @@ public class PlanificadorConfigActivity extends Activity implements View.OnFocus
     private boolean origenGPS = false;
     private boolean destinoGPS = false;
 
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-    }
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
+        overridePendingTransition(R.animator.activity_from_bottom, R.animator.activity_close_scale);
 
 		setContentView(R.layout.activity_planificador_config);
+
+        // header
+        View view = (View)findViewById(R.id.header);
+        Button button = (Button) view.findViewById(R.id.header_btn_back);
+        button.setVisibility(View.VISIBLE);
+
+        TextView textView = (TextView)view.findViewById(R.id.header_titulo);
+        textView.setText("Ruta");
 
 		geocoder = new Geocoder(this);
 
@@ -108,7 +111,7 @@ public class PlanificadorConfigActivity extends Activity implements View.OnFocus
             }
 		}
 
-		else if (view.getId() == R.id.planificador_back) {
+		else if (view.getId() == R.id.header_btn_buscar) {
 			setResult(Config.ACTIVITY_BACK);
 			finish();
 		} else if(view.getId() == R.id.planificador_origen_gps) {
