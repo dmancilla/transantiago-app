@@ -36,7 +36,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static cl.magnesia.itransantiago.Config.TAG;
 
-public class PlanificadorItinerariosActivity extends Activity implements AdapterView.OnItemClickListener {
+public class PlanificadorItinerariosActivity extends BaseActivity implements AdapterView.OnItemClickListener {
 
     private ListView listView;
     private TextView textView;

@@ -6,62 +6,66 @@
     android:orientation="horizontal">
 
     <TextView
-        android:background="@drawable/cuadro_negro"
         android:id="@+id/planificador_itinerario_idx"
+        fontPath="fonts/TSInfReg.otf"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="4dp"
-        android:layout_width="28dp"
+        android:background="@drawable/cuadro_negro"
         android:gravity="center_horizontal|center_vertical"
-        android:textColor="@color/white"
         android:text="1"
-        android:layout_height="28dp" />
+        android:textColor="@color/white"
+        android:textSize="14sp" />
 
     <TextView
-        android:layout_marginTop="4dp"
         android:id="@+id/planificador_itinerario_duracion"
+        fontPath="fonts/TSInfReg.otf"
         android:layout_width="120dp"
-        android:textColor="@color/gray"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
+        android:layout_gravity="center_vertical"
         android:text="60 mins"
-        android:layout_height="30dp" />
+        android:textColor="@color/gray"
+        android:textSize="14sp" />
 
     <ImageView
         android:id="@+id/planificador_itinerario_leg_1"
-        android:layout_marginTop="3dp"
-        android:background="@drawable/ico_walk"
         android:layout_width="25dp"
-        android:layout_height="29dp" />
+        android:layout_height="29dp"
+        android:layout_marginTop="3dp"
+        android:background="@drawable/ico_walk" />
 
     <ImageView
         android:id="@+id/planificador_itinerario_leg_2"
+        android:layout_width="25dp"
+        android:layout_height="29dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="3dp"
-        android:background="@drawable/ico_bus"
-        android:layout_width="25dp"
-        android:layout_height="29dp" />
+        android:background="@drawable/ico_bus" />
 
     <ImageView
         android:id="@+id/planificador_itinerario_leg_3"
+        android:layout_width="25dp"
+        android:layout_height="29dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="3dp"
-        android:background="@drawable/ico_walk"
-        android:layout_width="25dp"
-        android:layout_height="29dp" />
+        android:background="@drawable/ico_walk" />
 
     <ImageView
         android:id="@+id/planificador_itinerario_leg_4"
+        android:layout_width="25dp"
+        android:layout_height="29dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="3dp"
-        android:background="@drawable/ico_subway"
-        android:layout_width="25dp"
-        android:layout_height="29dp" />
+        android:background="@drawable/ico_subway" />
 
     <ImageView
         android:id="@+id/planificador_itinerario_leg_5"
+        android:layout_width="25dp"
+        android:layout_height="29dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="3dp"
-        android:background="@drawable/ico_walk"
-        android:layout_width="25dp"
-        android:layout_height="29dp" />
+        android:background="@drawable/ico_walk" />
 
 </LinearLayout>

@@ -1,0 +1,28 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/green_80"
+    android:layout_width="fill_parent"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:layout_height="30dp">
+    <TextView
+        android:id="@+id/planificador_tramo_nombre"
+        android:layout_width="0dp"
+        android:layout_marginRight="10dp"
+        android:gravity="center_vertical|right"
+        android:layout_weight="0.25"
+        android:textSize="12sp"
+
+        android:textColor="@color/lightgray"
+        android:text="Nombre"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:layout_height="wrap_content"
+        android:id="@+id/planificador_tramo_valor"
+        android:layout_width="0dp"
+        android:paddingLeft="10dp"
+        android:textSize="12sp"
+        android:textColor="@color/white"
+        android:text="Caminar"
+        android:layout_weight="0.75" />
+
+</LinearLayout>

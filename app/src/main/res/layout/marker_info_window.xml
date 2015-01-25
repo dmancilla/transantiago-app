@@ -35,7 +35,7 @@
         android:layout_marginTop="14dp"
         android:layout_toRightOf="@id/marker_descripcion"
         android:background="@drawable/info_window_bg"
-        android:text=">"
+        android:text="i"
         android:textColor="@color/marker_blue"
         android:textSize="12sp" />
 

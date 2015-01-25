@@ -3,6 +3,7 @@
 
     <item name="green" type="color">#FF24D17C</item>
     <item name="white" type="color">#FFFFFFFF</item>
+    <item name="lightgray" type="color">#FF999999</item>
     <item name="black" type="color">#FF000000</item>
     <item name="black_70" type="color">#B3000000</item>
     <item name="green_header" type="color">#FF08BA75</item>
@@ -10,6 +11,7 @@
     <item name="green_light" type="color">#FF59D378</item>
 
     <item name="green_background" type="color">#FF08D379</item>
+    <item name="green_80" type="color">#CC023924</item>
 
     <item name="polyline_bus" type="color">#FF74B019</item>
 

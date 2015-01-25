@@ -1,12 +1,15 @@
 package cl.magnesia.itransantiago;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import cl.magnesia.itransantiago.models.Tramo;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -33,13 +36,14 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import static cl.magnesia.itransantiago.Config.TAG;
 
 public class PlanificadorActivity extends FragmentActivity implements
-		LocationListener, GoogleMap.OnMyLocationChangeListener {
+		LocationListener, GoogleMap.OnMyLocationChangeListener, GoogleMap.OnInfoWindowClickListener {
 
 	private static final long MIN_TIME = 400;
 	private static final float MIN_DISTANCE = 1000;
@@ -52,10 +56,13 @@ public class PlanificadorActivity extends FragmentActivity implements
     private TextView textViewBadge;
 	private LocationManager locationManager;
     private LatLng lastKnowLatLng;
+
     // estado
     private JSONArray itineraries;
     private JSONObject plan;
     private int selectedItinerario;
+
+    private Map<String, Tramo> tramos = new HashMap<String, Tramo>();
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -69,6 +76,11 @@ public class PlanificadorActivity extends FragmentActivity implements
 		//CalligraphyConfig.initDefault("fonts/TSInfReg.otf", R.attr.fontPath);
 
 		setContentView(R.layout.activity_planificador);
+
+        // header
+        View view = (View)findViewById(R.id.header);
+        Button button = (Button) view.findViewById(R.id.header_btn_buscar);
+        button.setVisibility(View.VISIBLE);
 
 		SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.planificador_mapa);
@@ -95,6 +107,7 @@ public class PlanificadorActivity extends FragmentActivity implements
                 return view;
             }
         });
+        map.setOnInfoWindowClickListener(this);
 
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		locationManager.requestLocationUpdates(
@@ -111,7 +124,7 @@ public class PlanificadorActivity extends FragmentActivity implements
 	public void onClick(View view) {
 		System.out.println("click");
 		Log.d("iTransantiago", "click");
-		if (view.getId() == R.id.planificador_btn_buscar) // TODO: check button
+		if (view.getId() == R.id.header_btn_buscar) // TODO: check button
 		{
 			Intent intent = new Intent(this, PlanificadorConfigActivity.class);
 
@@ -238,9 +251,11 @@ public class PlanificadorActivity extends FragmentActivity implements
         for (int i = 0; i < legs.length(); i++) {
             JSONObject leg = legs.getJSONObject(i);
 
+            String mode = leg.getString("mode");
+
             double lat = leg.getJSONObject("from").getDouble("lat");
             double lon = leg.getJSONObject("from").getDouble("lon");
-            String mode = leg.getString("mode");
+
 
             String title = "";
             String snippet = "";
@@ -272,6 +287,8 @@ public class PlanificadorActivity extends FragmentActivity implements
                 v = 1.0f;
             }
 
+            Tramo tramo = new Tramo(mode, title, leg.getJSONObject("from").getString("name"), leg.getJSONObject("from").getString("stopCode"), leg.getJSONObject("to").getString("name"), leg.getJSONObject("to").getString("stopCode"), leg.getLong("duration"), leg.getLong("distance"));
+
             String encodedPoints = leg.getJSONObject("legGeometry")
                     .getString("points");
 
@@ -287,10 +304,12 @@ public class PlanificadorActivity extends FragmentActivity implements
             map.addPolyline(new PolylineOptions().addAll(points).color(
                     color));
 
-            map.addMarker(new MarkerOptions()
+            Marker marker = map.addMarker(new MarkerOptions()
                     .position(new LatLng(lat, lon)).title(title)
                     .snippet(snippet)
                     .icon(bitmapDescriptor).anchor(u, v));
+
+            tramos.put(marker.getId(), tramo);
         }
 
         map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
@@ -371,5 +390,17 @@ public class PlanificadorActivity extends FragmentActivity implements
     @Override
     public void onMyLocationChange(Location location) {
         lastKnowLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        Log.d("iTransantiago", "click");
+        Tramo tramo = tramos.get(marker.getId());
+
+        Intent intent = new Intent(this, PlanificadorTramoActivity.class);
+        intent.putExtra("TRAMO", tramo);
+
+        startActivityForResult(intent, Config.ACTIVITY_PLANIFICADOR_TRAMO);
+
     }
 }

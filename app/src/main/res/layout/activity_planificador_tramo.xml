@@ -1,0 +1,64 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/green_background"
+    android:orientation="vertical"
+    tools:context=".PlanificadorTramoActivity"
+    tools:ignore="MissingPrefix">
+
+    <include android:id="@+id/header" layout="@layout/header" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:background="@color/green_background"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:text="Información del tramo"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
+    <include android:id="@+id/planificador_tramo_row_1" layout="@layout/row_tramo" />
+    <include android:id="@+id/planificador_tramo_row_2" layout="@layout/row_tramo" />
+    <include android:id="@+id/planificador_tramo_row_3" layout="@layout/row_tramo" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:background="@color/green_background"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:text="Desde"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
+    <include android:id="@+id/planificador_tramo_desde" layout="@layout/row_tramo" />
+    <include android:id="@+id/planificador_tramo_desde_codigo" layout="@layout/row_tramo"
+        android:visibility="gone"
+        />
+    <include android:id="@+id/planificador_tramo_desde_ver" layout="@layout/row_tramo"
+        android:visibility="gone"
+        />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:background="@color/green_background"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:text="Hasta"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
+    <include android:id="@+id/planificador_tramo_hasta" layout="@layout/row_tramo"
+        />
+    <include android:id="@+id/planificador_tramo_hasta_codigo" layout="@layout/row_tramo"
+        android:visibility="gone"
+        />
+    <include android:id="@+id/planificador_tramo_hasta_ver" layout="@layout/row_tramo"
+        android:visibility="gone"
+        />
+
+
+</LinearLayout>

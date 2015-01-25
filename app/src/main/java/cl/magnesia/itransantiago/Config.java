@@ -7,6 +7,7 @@ public class Config {
 	public static final int ACTIVITY_BACK = -1;
 	public static final int ACTIVITY_PLANIFICADOR_CONFIG = 100;
     public static final int ACTIVITY_PLANIFICADOR_ITINERARIO = 101;
+    public static final int ACTIVITY_PLANIFICADOR_TRAMO = 102;
 
 	public static final String TAG = "iTransantiago";
 

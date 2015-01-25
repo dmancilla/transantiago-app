@@ -80,8 +80,9 @@
             android:label="@string/title_activity_planificador_config"
             android:screenOrientation="portrait" >
         </activity>
-        <activity android:name=".PlanificadorItinerariosActivity"
-            android:screenOrientation="portrait">
+        <activity
+            android:name=".PlanificadorItinerariosActivity"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".RecorridosActivity"
@@ -90,6 +91,10 @@
         <activity
             android:name=".RecorridosResultado"
             android:label="@string/title_activity_recorridos_resultado" >
+        </activity>
+        <activity
+            android:name=".PlanificadorTramoActivity"
+            android:label="@string/title_activity_planificador_tramo" >
         </activity>
     </application>
 
