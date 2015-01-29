@@ -20,11 +20,14 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cl.magnesia.itransantiago.models.Paradero;
@@ -32,7 +35,7 @@ import cl.magnesia.itransantiago.models.Ruta;
 import cl.magnesia.itransantiago.models.Trip;
 
 
-public class RecorridosResultadoActivity extends BaseFragmentActivity {
+public class RecorridosResultadoActivity extends BaseFragmentActivity implements GoogleMap.InfoWindowAdapter, GoogleMap.OnInfoWindowClickListener {
 
     private GoogleMap map;
     private TextView textHeader;
@@ -45,11 +48,16 @@ public class RecorridosResultadoActivity extends BaseFragmentActivity {
     private String servicio;
     private int direccion = 0;
 
+    // zoom checker
+    private Handler handler;
+    private Runnable zoomChecker;
+    public static final int zoomCheckingDelay = 500;
+
+    private List<Marker> markers = new ArrayList<Marker>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         setContentView(R.layout.activity_recorridos_resultado);
 
@@ -76,6 +84,27 @@ public class RecorridosResultadoActivity extends BaseFragmentActivity {
 
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         map.setMyLocationEnabled(true);
+        map.setInfoWindowAdapter(this);
+        map.setOnInfoWindowClickListener(this);
+
+
+        // check zoom
+        handler = new Handler();
+        zoomChecker = new Runnable()
+        {
+            public void run()
+            {
+                handler.removeCallbacks(zoomChecker);
+                handler.postDelayed(zoomChecker, zoomCheckingDelay);
+
+                Log.d("iTransantiago", "zoom. " + map.getCameraPosition().zoom);
+
+                for(Marker marker : markers)
+                {
+                    marker.setVisible(map.getCameraPosition().zoom > 14);
+                }
+            }
+        };
 
         final Handler myHandler = new Handler();
         Runnable runnable = new Runnable(){
@@ -86,6 +115,17 @@ public class RecorridosResultadoActivity extends BaseFragmentActivity {
             }
         };
         myHandler.postDelayed(runnable, 1500);//Message will be delivered in 1 second.
+
+        overridePendingTransition(R.animator.activity_from_right, R.animator.activity_close_scale);
+
+    }
+
+    public void onResume()
+    {
+        super.onResume();
+
+        handler.postDelayed(zoomChecker, zoomCheckingDelay);
+
 
     }
 
@@ -139,7 +179,14 @@ public class RecorridosResultadoActivity extends BaseFragmentActivity {
         BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.icon_bus);
         for(Paradero paradero : paraderos)
         {
-            map.addMarker(new MarkerOptions().position(paradero.latLng).icon(icon).anchor(0.0f, 1.0f));
+            MarkerOptions markerOptions = new MarkerOptions().position(paradero.latLng)
+                    .title("Paradero de Bus")
+                    .snippet(paradero.name)
+                    .icon(icon)
+                    .anchor(0.0f, 1.0f);
+
+            Marker marker = map.addMarker(markerOptions);
+            markers.add(marker);
         }
 
         map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
@@ -169,4 +216,27 @@ public class RecorridosResultadoActivity extends BaseFragmentActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    // InfowWindowAdapter
+    @Override
+    public View getInfoWindow(Marker marker) {
+        return null;
+    }
+
+    @Override
+    public View getInfoContents(Marker marker) {
+        View view = getLayoutInflater().inflate(R.layout.marker_info_window, null);
+
+        view.findViewById(R.id.marker_btn_disclosure).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.marker_btn_info).setVisibility(View.GONE);
+
+        TextView textTitulo = (TextView) view.findViewById(R.id.marker_titulo);
+        textTitulo.setText(marker.getTitle());
+
+        TextView textDescripcion = (TextView) view.findViewById(R.id.marker_descripcion);
+        textDescripcion.setText(marker.getSnippet());
+
+        return view;
+    }
+
 }
