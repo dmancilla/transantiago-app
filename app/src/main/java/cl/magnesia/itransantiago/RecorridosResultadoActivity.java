@@ -28,7 +28,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cl.magnesia.itransantiago.models.Paradero;
 import cl.magnesia.itransantiago.models.Ruta;
@@ -48,6 +50,7 @@ public class RecorridosResultadoActivity extends BaseFragmentActivity implements
     private Ruta ruta;
     private String servicio;
     private int direccion = 0;
+    private Map<String, String> paraderosCodes = new HashMap<String, String>();
 
     // zoom checker
     private Handler handler;
@@ -187,6 +190,7 @@ public class RecorridosResultadoActivity extends BaseFragmentActivity implements
                     .anchor(0.0f, 1.0f);
 
             Marker marker = map.addMarker(markerOptions);
+            paraderosCodes.put(marker.getId(), paradero.code);
             markers.add(marker);
         }
 
@@ -242,12 +246,16 @@ public class RecorridosResultadoActivity extends BaseFragmentActivity implements
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        Log.d("iTransantiago", "click");
+
 
         handler.removeCallbacks(zoomChecker);
 
+        String code = paraderosCodes.get(marker.getId());
+
+        Log.d("iTransantiago", "click. " + code);
+
         Intent intent = new Intent(this, RecorridosParaderoActivity.class);
-        intent.putExtra("PARADERO", "PI539");
+        intent.putExtra("PARADERO", code);
 
         startActivityForResult(intent, Config.ACTIVITY_PLANIFICADOR_TRAMO);
 

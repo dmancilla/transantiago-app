@@ -31,7 +31,7 @@ public class MyDatabase extends SQLiteAssetHelper {
         SQLiteDatabase db = getReadableDatabase();
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 
-        String[] sqlSelect = { "stop_id", "stop_name", "stop_lat", "stop_lon" };
+        String[] sqlSelect = { "stop_id", "stop_code", "stop_name", "stop_lat", "stop_lon" };
         String sqlTables = "stops";
 
         qb.setTables(sqlTables);
@@ -42,11 +42,12 @@ public class MyDatabase extends SQLiteAssetHelper {
         while (cursor.moveToNext()) {
 
             String stopID = cursor.getString(0);
-            String name = cursor.getString(1);
-            double lat = cursor.getDouble(2);
-            double lon = cursor.getDouble(3);
+            String code = cursor.getString(1);
+            String name = cursor.getString(2);
+            double lat = cursor.getDouble(3);
+            double lon = cursor.getDouble(4);
 
-            Paradero paradero = new Paradero(stopID, name, lat, lon);
+            Paradero paradero = new Paradero(stopID, code, name, lat, lon);
             paraderos.add(paradero);
 
         }
@@ -132,7 +133,7 @@ public class MyDatabase extends SQLiteAssetHelper {
 
         SQLiteDatabase db = getReadableDatabase();
 
-        Cursor cursor = db.rawQuery("SELECT stops.stop_id, stops.stop_name, stops.stop_lat, stops.stop_lon " +
+        Cursor cursor = db.rawQuery("SELECT stops.stop_id, stops.stop_code, stops.stop_name, stops.stop_lat, stops.stop_lon " +
                         "FROM stop_times " +
                         "LEFT JOIN trips ON stop_times.trip_id=trips.trip_id " +
                         "LEFT JOIN stops ON stop_times.stop_id=stops.stop_id " +
@@ -144,11 +145,12 @@ public class MyDatabase extends SQLiteAssetHelper {
         while(cursor.moveToNext())
         {
             String stopID = cursor.getString(0);
-            String name = cursor.getString(1);
-            double lat = cursor.getDouble(2);
-            double lng = cursor.getDouble(3);
+            String code = cursor.getString(1);
+            String name = cursor.getString(2);
+            double lat = cursor.getDouble(3);
+            double lng = cursor.getDouble(4);
 
-            Paradero paradero = new Paradero(stopID, name, lat, lng);
+            Paradero paradero = new Paradero(stopID, code, name, lat, lng);
             paraderos.add(paradero);
         }
 
