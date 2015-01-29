@@ -19,5 +19,6 @@
     <string name="title_activity_recorridos">RecorridosActivity</string>
     <string name="title_activity_recorridos_resultado">RecorridosResultado</string>
     <string name="title_activity_planificador_tramo">PlanificadorTramoActivity</string>
+    <string name="title_activity_recorridos_paradero">RecorridosParadero</string>
 
 </resources>

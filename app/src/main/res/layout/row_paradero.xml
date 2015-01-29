@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="50dp"
+    android:background="@color/green_background"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/recorridos_paradero_servicio"
+        android:layout_width="78dp"
+        android:layout_height="35dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="8dp"
+
+        android:background="@drawable/detalleparadero_bus_bg"
+        android:gravity="center_vertical"
+        android:paddingLeft="4dp"
+        android:text="201ec"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+    
+    <View
+        android:id="@+id/recorridos_paradero_container"
+        android:layout_marginTop="2dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="10dp"
+        android:layout_toRightOf="@id/recorridos_paradero_servicio"
+        android:layout_width="wrap_content"
+        android:layout_height="46dp"
+        android:background="@color/white"
+        />
+
+    <TextView
+        android:layout_toRightOf="@id/recorridos_paradero_servicio"
+        android:id="@+id/recorridos_paradero_tiempo"
+        android:layout_marginTop="10dp"
+        fontPath="fonts/TSInfReg.otf"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:text="Entre 05 y 09 min."
+        android:textColor="@color/black"
+        android:textSize="12sp" />
+
+    <ImageView
+        android:layout_toRightOf="@id/recorridos_paradero_servicio"
+        android:id="@+id/planificador_itinerario_leg_1"
+        android:layout_width="17dp"
+        android:layout_height="16dp"
+        android:layout_marginLeft="13dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/detalleparadero_reloj" />
+
+
+    <TextView
+        android:layout_toRightOf="@id/recorridos_paradero_servicio"
+        android:id="@+id/recorridos_paradero_distancia"
+        android:layout_marginTop="28dp"
+        fontPath="fonts/TSInfReg.otf"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:text="2540 mts."
+        android:textColor="@color/gray"
+        android:textSize="12sp" />
+
+    <ImageView
+        android:layout_toRightOf="@id/recorridos_paradero_servicio"
+        android:layout_width="24dp"
+        android:layout_height="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/detalleparadero_distancia" />
+
+    <ImageView
+        android:layout_width="29dp"
+        android:layout_height="23dp"
+        android:layout_marginRight="6dp"
+        android:layout_marginTop="14dp"
+        android:layout_alignRight="@id/recorridos_paradero_container"
+        android:background="@drawable/detalleparadero_forward" />
+
+
+
+</RelativeLayout>

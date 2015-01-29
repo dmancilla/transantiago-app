@@ -1,0 +1,48 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/green_background"
+    tools:context="cl.magnesia.itransantiago.RecorridosParaderoActivity">
+
+    <include layout="@layout/header" android:id="@+id/header" />
+
+    <ImageView
+        android:id="@+id/recorridos_paradero_header"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/detalleparadero_header"
+        android:layout_below="@id/header"
+        />
+
+    <TextView
+        fontPath="fonts/TSInfReg.otf"
+        android:textColor="@color/white"
+        android:layout_marginTop="16dp"
+        android:layout_below="@id/header"
+        android:text="Tu bus llega en:"
+        android:layout_marginLeft="150dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/recorridos_paradero_header"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <include layout="@layout/row_paradero" android:id="@+id/recorridos_paradero_row_1" />
+        <include layout="@layout/row_paradero" android:id="@+id/recorridos_paradero_row_2" />
+        <include layout="@layout/row_paradero" android:id="@+id/recorridos_paradero_row_3" />
+        <include layout="@layout/row_paradero" android:id="@+id/recorridos_paradero_row_4" />
+        <include layout="@layout/row_paradero" android:id="@+id/recorridos_paradero_row_5" />
+
+        </LinearLayout>
+
+
+
+
+</RelativeLayout>

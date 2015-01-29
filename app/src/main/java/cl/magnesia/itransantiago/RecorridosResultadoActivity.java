@@ -32,6 +32,7 @@ import java.util.List;
 
 import cl.magnesia.itransantiago.models.Paradero;
 import cl.magnesia.itransantiago.models.Ruta;
+import cl.magnesia.itransantiago.models.Tramo;
 import cl.magnesia.itransantiago.models.Trip;
 
 
@@ -237,6 +238,19 @@ public class RecorridosResultadoActivity extends BaseFragmentActivity implements
         textDescripcion.setText(marker.getSnippet());
 
         return view;
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        Log.d("iTransantiago", "click");
+
+        handler.removeCallbacks(zoomChecker);
+
+        Intent intent = new Intent(this, RecorridosParaderoActivity.class);
+        intent.putExtra("PARADERO", "PI539");
+
+        startActivityForResult(intent, Config.ACTIVITY_PLANIFICADOR_TRAMO);
+
     }
 
 }

@@ -13,4 +13,6 @@ public class Config {
 
 	public static final LatLng latLngStgo = new LatLng(-33.4430, -70.6537);
 
+    public static final String URL_PREDICCION = "";
+
 }

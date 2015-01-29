@@ -96,6 +96,10 @@
             android:name=".PlanificadorTramoActivity"
             android:label="@string/title_activity_planificador_tramo" >
         </activity>
+        <activity
+            android:name=".RecorridosParaderoActivity"
+            android:label="@string/title_activity_recorridos_paradero" >
+        </activity>
     </application>
 
 </manifest>
