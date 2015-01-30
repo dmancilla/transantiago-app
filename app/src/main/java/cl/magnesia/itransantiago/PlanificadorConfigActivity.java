@@ -94,7 +94,11 @@ public class PlanificadorConfigActivity extends BaseActivity implements View.OnF
 		Log.d(TAG, "view. " + view.getClass());
 		Log.d(TAG, "view. " + view.getId());
 
-		if (view.getId() == R.id.planificador_swap) {
+        if( view.getId() == R.id.header_btn_back)
+        {
+            finish();
+        }
+		else if (view.getId() == R.id.planificador_swap) {
 			String aux = textOrigen.getText().toString();
 			textOrigen.setText(textDestino.getText());
 			textDestino.setText(aux);
