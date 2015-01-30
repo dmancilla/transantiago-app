@@ -50,7 +50,7 @@ public class RecorridosResultadoActivity extends BaseFragmentActivity implements
     private Ruta ruta;
     private String servicio;
     private int direccion = 0;
-    private Map<String, String> paraderosCodes = new HashMap<String, String>();
+    private Map<String, Paradero> paraderosMap = new HashMap<String, Paradero>();
 
     // zoom checker
     private Handler handler;
@@ -190,7 +190,7 @@ public class RecorridosResultadoActivity extends BaseFragmentActivity implements
                     .anchor(0.0f, 1.0f);
 
             Marker marker = map.addMarker(markerOptions);
-            paraderosCodes.put(marker.getId(), paradero.code);
+            paraderosMap.put(marker.getId(), paradero);
             markers.add(marker);
         }
 
@@ -250,12 +250,12 @@ public class RecorridosResultadoActivity extends BaseFragmentActivity implements
 
         handler.removeCallbacks(zoomChecker);
 
-        String code = paraderosCodes.get(marker.getId());
+        Paradero paradero = paraderosMap.get(marker.getId());
 
-        Log.d("iTransantiago", "click. " + code);
+        Log.d("iTransantiago", "click. " + paradero.name);
 
         Intent intent = new Intent(this, RecorridosParaderoActivity.class);
-        intent.putExtra("PARADERO", code);
+        intent.putExtra("PARADERO", paradero);
 
         startActivityForResult(intent, Config.ACTIVITY_PLANIFICADOR_TRAMO);
 

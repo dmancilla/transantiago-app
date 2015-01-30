@@ -1,14 +1,29 @@
 package cl.magnesia.itransantiago.models;
 
-import com.google.android.gms.maps.model.LatLng;
+import android.os.Parcelable;
 
-public class Paradero {
+import com.google.android.gms.maps.model.LatLng;
+import com.orm.SugarRecord;
+import com.orm.dsl.Ignore;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Paradero  extends SugarRecord<Paradero> implements Serializable
+{
 
     public String stopID;
     public String name;
     public String code;
 
-    public LatLng latLng;
+    @Ignore
+    public transient LatLng latLng;
+
+    public Paradero()
+    {
+
+    }
 
 	public Paradero(String stopID, String code, String name, double lat, double lng) {
 

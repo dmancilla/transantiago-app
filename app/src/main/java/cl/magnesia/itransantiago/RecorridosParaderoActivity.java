@@ -24,13 +24,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import cl.magnesia.itransantiago.models.Paradero;
 import cl.magnesia.itransantiago.models.Tramo;
 
 
 public class RecorridosParaderoActivity extends BaseActivity {
+
+    public Button btnFavorito;
+
+    public Paradero paradero;
 
 
     @Override
@@ -39,14 +45,17 @@ public class RecorridosParaderoActivity extends BaseActivity {
         setContentView(R.layout.activity_recorridos_paradero);
 
         Bundle bundle = getIntent().getExtras();
-        String paradero = bundle.getString("PARADERO");
+        paradero = (Paradero) bundle.getSerializable("PARADERO");
 
         // header
         Button button = (Button) findViewById(R.id.header_btn_back);
         button.setVisibility(View.VISIBLE);
 
+        button = (Button) findViewById(R.id.header_btn_favorito);
+        button.setVisibility(View.VISIBLE);
+
         TextView textView = (TextView)findViewById(R.id.header_titulo);
-        textView.setText(String.format("Paradero %s", paradero));
+        textView.setText(String.format("Paradero %s", paradero.code));
 
         findViewById(R.id.recorridos_paradero_row_1).setVisibility(View.GONE);
         findViewById(R.id.recorridos_paradero_row_2).setVisibility(View.GONE);
@@ -54,8 +63,19 @@ public class RecorridosParaderoActivity extends BaseActivity {
         findViewById(R.id.recorridos_paradero_row_4).setVisibility(View.GONE);
         findViewById(R.id.recorridos_paradero_row_5).setVisibility(View.GONE);
 
+        // chequear favorito
+        btnFavorito = (Button) findViewById(R.id.header_btn_favorito);
+        if(Paradero.find(Paradero.class, "stopID = ?", paradero.stopID).isEmpty())
+        {
+            btnFavorito.setBackgroundResource(R.drawable.btn_guardar);
+        }
+        else
+        {
+            btnFavorito.setBackgroundResource(R.drawable.btn_desguardar);
+        }
+
         String url = String
-                .format("%s&paradero=%s", Config.URL_PREDICCION, paradero);
+                .format("%s&paradero=%s", Config.URL_PREDICCION, paradero.code);
 
         Log.d("iTransantiago", url);
 
@@ -134,6 +154,7 @@ public class RecorridosParaderoActivity extends BaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("iTransantiago", error.getMessage());
+                dialog.dismiss();
             }
         });
         // Add the request to the RequestQueue.
@@ -142,9 +163,26 @@ public class RecorridosParaderoActivity extends BaseActivity {
 
     public void onClick(View view)
     {
-        if(true)
+        if(view.getId() == R.id.header_btn_back)
         {
             finish();
+        }
+        else if(view.getId() == R.id.header_btn_favorito)
+        {
+            List<Paradero> paraderos = Paradero.find(Paradero.class, "stopID = ?", paradero.stopID);
+            Paradero found = paraderos.isEmpty() ? paraderos.get(0) : null;
+            if(found == null)
+            {
+                paradero.save();
+                btnFavorito.setBackgroundResource(R.drawable.btn_desguardar);
+            }
+            else
+            {
+                Paradero.deleteAll(Paradero.class, "stopID = ?", paradero.stopID);
+                btnFavorito.setBackgroundResource(R.drawable.btn_guardar);
+            }
+
+            Log.d("iTransantiago", "favorito");
         }
     }
 

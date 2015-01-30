@@ -4,12 +4,20 @@ import android.app.TabActivity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
+
+import com.orm.Database;
+
+import java.util.Iterator;
+import java.util.List;
+
+import cl.magnesia.itransantiago.models.Paradero;
 
 public class HomeActivity extends TabActivity {
 
@@ -37,7 +45,7 @@ public class HomeActivity extends TabActivity {
 		TabSpec favoritos = tabHost.newTabSpec("Favoritos");
 		favoritos.setIndicator("",
 				getResources().getDrawable(R.drawable.tab_favoritos));
-		Intent favoritosIntent = new Intent(this, AcercaActivity.class);
+		Intent favoritosIntent = new Intent(this, FavoritosActivity.class);
 		favoritos.setContent(favoritosIntent);
 
 		TabSpec recorridos = tabHost.newTabSpec("Recorridos");
