@@ -36,11 +36,14 @@ public class FavoritosActivity extends BaseActivity {
         buttonParaderos = (Button) findViewById(R.id.favoritos_btn_paraderos);
 
         listView = (ListView) findViewById(R.id.favoritos_list_view);
+        listView.setAdapter(new FavoritosRutaAdapter(this, Viaje.all()));
+
+        buttonRutas.setBackgroundColor(getResources().getColor(R.color.green_favorite_on));
+        buttonParaderos.setBackgroundColor(getResources().getColor(R.color.green_favorite_off));
     }
 
     public void onClick(View view)
     {
-        Log.d("iTransantiago", "ID. " + view.getId());
         if(view.getId() == R.id.favoritos_btn_rutas)
         {
 
@@ -60,19 +63,6 @@ public class FavoritosActivity extends BaseActivity {
             buttonRutas.setBackgroundColor(getResources().getColor(R.color.green_favorite_off));
 
         }
-    }
-
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-
-        FavoritosRutaAdapter adapter = new FavoritosRutaAdapter(this, Viaje.all());
-        listView.setAdapter(adapter);
-
-        buttonRutas.setBackgroundColor(getResources().getColor(R.color.green_favorite_on));
-        buttonParaderos.setBackgroundColor(getResources().getColor(R.color.green_favorite_off));
-        
     }
 
 }
