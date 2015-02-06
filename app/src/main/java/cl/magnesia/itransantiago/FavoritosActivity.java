@@ -47,8 +47,8 @@ public class FavoritosActivity extends BaseActivity {
             FavoritosRutaAdapter adapter = new FavoritosRutaAdapter(this, Viaje.all());
             listView.setAdapter(adapter);
 
-            buttonRutas.setBackgroundColor(getResources().getColor(R.color.green_favorite_off));
-            buttonParaderos.setBackgroundColor(getResources().getColor(R.color.green_favorite_on));
+            buttonRutas.setBackgroundColor(getResources().getColor(R.color.green_favorite_on));
+            buttonParaderos.setBackgroundColor(getResources().getColor(R.color.green_favorite_off));
         }
         else if(view.getId() == R.id.favoritos_btn_paraderos)
         {
@@ -56,10 +56,23 @@ public class FavoritosActivity extends BaseActivity {
             FavoritosParaderoAdapter adapter = new FavoritosParaderoAdapter(this, Paradero.all());
             listView.setAdapter(adapter);
 
-            buttonParaderos.setBackgroundColor(getResources().getColor(R.color.green_favorite_off));
-            buttonRutas.setBackgroundColor(getResources().getColor(R.color.green_favorite_on));
+            buttonParaderos.setBackgroundColor(getResources().getColor(R.color.green_favorite_on));
+            buttonRutas.setBackgroundColor(getResources().getColor(R.color.green_favorite_off));
 
         }
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        FavoritosRutaAdapter adapter = new FavoritosRutaAdapter(this, Viaje.all());
+        listView.setAdapter(adapter);
+
+        buttonRutas.setBackgroundColor(getResources().getColor(R.color.green_favorite_on));
+        buttonParaderos.setBackgroundColor(getResources().getColor(R.color.green_favorite_off));
+        
     }
 
 }
