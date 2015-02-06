@@ -16,24 +16,31 @@
             android:layout_height="0dp"
             android:layout_centerHorizontal="true"/>
         <Button
+            android:onClick="onClick"
+            android:id="@+id/favoritos_btn_rutas"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:layout_alignRight="@id/strut"
+            android:layout_alignParentLeft="true"
+            android:text="Rutas"/>
+        <Button
+            android:onClick="onClick"
             android:id="@+id/favoritos_btn_paraderos"
             android:paddingLeft="0dp"
             android:layout_marginRight="0dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignRight="@id/strut"
-            android:layout_alignParentLeft="true"
-            android:text="Paraderos"/>
-        <Button
-            android:id="@+id/favoritos_btn_rutas"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/strut"
+
             android:layout_alignParentRight="true"
-            android:text="Rutas"/>
+            android:layout_alignLeft="@id/strut"
+
+            android:text="Paraderos"/>
+
         </RelativeLayout>
 
     <ListView
+        android:divider="@color/white"
         android:id="@+id/favoritos_list_view"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">

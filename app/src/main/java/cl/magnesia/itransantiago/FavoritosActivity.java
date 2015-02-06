@@ -1,22 +1,17 @@
 package cl.magnesia.itransantiago;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.Iterator;
-import java.util.List;
 
-import cl.magnesia.itransantiago.R;
 import cl.magnesia.itransantiago.models.Paradero;
-import cl.magnesia.itransantiago.widgets.FavoritosParaderosAdapter;
-import cl.magnesia.itransantiago.widgets.ItinerariosAdapter;
+import cl.magnesia.itransantiago.models.Viaje;
+import cl.magnesia.itransantiago.widgets.FavoritosParaderoAdapter;
+import cl.magnesia.itransantiago.widgets.FavoritosRutaAdapter;
 
 public class FavoritosActivity extends BaseActivity {
 
@@ -39,12 +34,17 @@ public class FavoritosActivity extends BaseActivity {
 
     public void onClick(View view)
     {
-        if(view.getId() == R.id.favoritos_btn_paraderos)
+        Log.d("iTransantiago", "ID. " + view.getId());
+        if(view.getId() == R.id.favoritos_btn_rutas)
         {
 
-            Iterator<Paradero> paraderos = Paradero.findAll(Paradero.class);
+            FavoritosRutaAdapter adapter = new FavoritosRutaAdapter(this, Viaje.all());
+            listView.setAdapter(adapter);
+        }
+        else if(view.getId() == R.id.favoritos_btn_paraderos)
+        {
 
-            FavoritosParaderosAdapter adapter = new FavoritosParaderosAdapter(this, Paradero.all());
+            FavoritosParaderoAdapter adapter = new FavoritosParaderoAdapter(this, Paradero.all());
             listView.setAdapter(adapter);
         }
     }

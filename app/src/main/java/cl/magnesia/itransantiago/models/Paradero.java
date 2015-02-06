@@ -48,7 +48,6 @@ public class Paradero  extends SugarRecord<Paradero> implements Serializable
     public static Paradero[] all()
     {
         int count = (int)Paradero.count(Paradero.class, "", null);
-        Log.d("iTransantiago", "count..." + count);
         Iterator<Paradero> iterator = Paradero.findAll(Paradero.class);
 
         Paradero[] paraderos = new Paradero[count];

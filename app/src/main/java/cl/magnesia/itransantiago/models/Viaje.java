@@ -1,6 +1,10 @@
 package cl.magnesia.itransantiago.models;
 
+import android.util.Log;
+
 import com.orm.SugarRecord;
+
+import java.util.Iterator;
 
 public class Viaje extends SugarRecord<Viaje> {
 
@@ -16,6 +20,22 @@ public class Viaje extends SugarRecord<Viaje> {
     {
         this.origen = origen;
         this.destino = destino;
+
+    }
+
+    public static Viaje[] all()
+    {
+        int count = (int)Viaje.count(Viaje.class, "", null);
+        Iterator<Viaje> iterator = Viaje.findAll(Viaje.class);
+
+        Viaje[] viajes = new Viaje[count];
+        int i = 0;
+        while(iterator.hasNext())
+        {
+            viajes[i++] = iterator.next();
+        }
+
+        return viajes;
 
     }
 }
