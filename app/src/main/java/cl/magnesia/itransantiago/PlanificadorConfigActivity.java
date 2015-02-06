@@ -58,6 +58,9 @@ public class PlanificadorConfigActivity extends BaseActivity implements View.OnF
 
     private LatLng latLng;
 
+    private String origen;
+    private String destino;
+
     private boolean origenGPS = false;
     private boolean destinoGPS = false;
 
@@ -140,18 +143,24 @@ public class PlanificadorConfigActivity extends BaseActivity implements View.OnF
 
         else {
 
-			String origen = textOrigen.getText().toString();
-			String destino = textDestino.getText().toString();
+			origen = textOrigen.getText().toString();
+			destino = textDestino.getText().toString();
+
+            if(origen.length() == 0)
+                origen = null;
+
+            if(destino.length() == 0)
+                origen = null;
 
             // origen = "Vergara 471";
             // destino = "Vicuña Mackenna 6000";
 
-			if (0 == origen.length() && !origenGPS) {
+			if (null == origen && !origenGPS) {
 				Utils.errorDialog(this,
 						"Debe ingresar una dirección de origen.");
 				return;
 			}
-			if (0 == destino.length() && !destinoGPS) {
+			if (null == destino && !destinoGPS) {
 				Utils.errorDialog(this,
 						"Debe ingresar una dirección de destino.");
 				return;
@@ -260,6 +269,8 @@ public class PlanificadorConfigActivity extends BaseActivity implements View.OnF
 
 			Intent data = new Intent();
 			data.putExtra("response", response.toString());
+            data.putExtra("origen", origen);
+            data.putExtra("destino", destino);
 			setResult(Config.ACTIVITY_PLANIFICADOR_CONFIG, data);
 			finish();
 		}

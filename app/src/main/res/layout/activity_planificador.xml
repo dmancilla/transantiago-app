@@ -23,6 +23,7 @@
         android:background="@color/black_70">
         
         <Button
+            android:onClick="onClick"
             android:id="@+id/planificador_resultados_guardar"
             android:layout_width="45dp"
             android:layout_height="45dp"

@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import cl.magnesia.itransantiago.models.Tramo;
+import cl.magnesia.itransantiago.models.Viaje;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -39,6 +40,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import static cl.magnesia.itransantiago.Config.TAG;
 
@@ -52,12 +54,19 @@ public class PlanificadorActivity extends FragmentActivity implements
 	private static final int colorSubway = Color.rgb(227, 0, 0);
 	private GoogleMap map;
     private RelativeLayout layoutResultados;
+
+    private Button buttonFavorito;
     private TextView textViewDuracion;
     private TextView textViewBadge;
 	private LocationManager locationManager;
     private LatLng lastKnowLatLng;
 
     // estado
+    private Viaje viaje;
+    private String origen;
+    private String destino;
+
+    private JSONObject response;
     private JSONArray itineraries;
     private JSONObject plan;
     private int selectedItinerario;
@@ -116,13 +125,13 @@ public class PlanificadorActivity extends FragmentActivity implements
         layoutResultados = (RelativeLayout) findViewById(R.id.planificador_resultados);
         layoutResultados.setVisibility(View.GONE);
 
+        buttonFavorito = (Button) findViewById(R.id.planificador_resultados_guardar);
         textViewDuracion = (TextView) findViewById(R.id.planificador_resultados_duracion);
         textViewBadge = (TextView) findViewById(R.id.planificador_text_view_mas_rutas);
 
 	}
 
 	public void onClick(View view) {
-		System.out.println("click");
 		Log.d("iTransantiago", "click");
 		if (view.getId() == R.id.header_btn_buscar) // TODO: check button
 		{
@@ -144,6 +153,34 @@ public class PlanificadorActivity extends FragmentActivity implements
             intent.putExtra("ITINERARIO", selectedItinerario);
             startActivityForResult(intent, Config.ACTIVITY_PLANIFICADOR_CONFIG);
         }
+        else if(view.getId() == R.id.planificador_resultados_guardar)
+        {
+
+            if(null == viaje)
+            {
+                // crea un favorito
+                viaje = new Viaje(origen, destino);
+                viaje.save();
+
+                Toast.makeText(this, "Favorito guardado", Toast.LENGTH_SHORT).show();
+                buttonFavorito.setBackgroundResource(R.drawable.btn_desguardar_ruta);
+
+
+            }
+            else
+            {
+                // elimina un favorito
+                viaje.delete();
+                viaje = null;
+
+                Toast.makeText(this, "Favorito eliminado", Toast.LENGTH_SHORT).show();
+                buttonFavorito.setBackgroundResource(R.drawable.btn_guardar_ruta);
+            }
+
+
+
+
+        }
 	}
 
 	@Override
@@ -161,9 +198,12 @@ public class PlanificadorActivity extends FragmentActivity implements
 			try {
 
                 selectedItinerario = 0;
+                viaje = null;
 
 				Bundle bundle = data.getExtras();
-				JSONObject response = new JSONObject(
+                origen = bundle.getString("origen");
+                destino = bundle.getString("destino");
+				response = new JSONObject(
 						bundle.getString("response"));
 
 				plan = response.getJSONObject("plan");
