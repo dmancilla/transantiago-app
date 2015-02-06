@@ -27,22 +27,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <LinearLayout
+
+    <ListView
+        android:id="@+id/recorridos_paradero_list_view"
         android:layout_marginTop="10dp"
         android:layout_below="@id/recorridos_paradero_header"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-        <include layout="@layout/row_paradero" android:id="@+id/recorridos_paradero_row_1" />
-        <include layout="@layout/row_paradero" android:id="@+id/recorridos_paradero_row_2" />
-        <include layout="@layout/row_paradero" android:id="@+id/recorridos_paradero_row_3" />
-        <include layout="@layout/row_paradero" android:id="@+id/recorridos_paradero_row_4" />
-        <include layout="@layout/row_paradero" android:id="@+id/recorridos_paradero_row_5" />
-
-        </LinearLayout>
-
-
+        </ListView>
 
 
 </RelativeLayout>

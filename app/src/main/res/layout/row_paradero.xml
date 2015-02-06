@@ -2,6 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="50dp"
+    android:descendantFocusability="blocksDescendants"
+
     android:background="@color/green_background"
     android:orientation="horizontal">
 
@@ -18,67 +20,154 @@
         android:text="201ec"
         android:textColor="@color/white"
         android:textSize="16sp" />
-    
-    <View
-        android:id="@+id/recorridos_paradero_container"
-        android:layout_marginTop="2dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="10dp"
+
+    <ScrollView
+        android:id="@+id/recorridos_paradero_scroll"
         android:layout_toRightOf="@id/recorridos_paradero_servicio"
         android:layout_width="wrap_content"
-        android:layout_height="46dp"
-        android:background="@color/white"
-        />
+        android:layout_height="46dp">
 
-    <TextView
-        android:layout_toRightOf="@id/recorridos_paradero_servicio"
-        android:id="@+id/recorridos_paradero_tiempo"
-        android:layout_marginTop="10dp"
-        fontPath="fonts/TSInfReg.otf"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="40dp"
-        android:text="Entre 05 y 09 min."
-        android:textColor="@color/black"
-        android:textSize="12sp" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:layout_height="fill_parent">
 
-    <ImageView
-        android:layout_toRightOf="@id/recorridos_paradero_servicio"
-        android:id="@+id/planificador_itinerario_leg_1"
-        android:layout_width="17dp"
-        android:layout_height="16dp"
-        android:layout_marginLeft="13dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/detalleparadero_reloj" />
+            <RelativeLayout
+                android:id="@+id/recorridos_paradero_container"
+                android:layout_marginTop="2dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="10dp"
+
+                android:layout_width="wrap_content"
+                android:layout_height="46dp"
+                android:background="@color/white"
+                >
+
+                <TextView
+                    android:layout_alignParentLeft="true"
+
+                    android:id="@+id/recorridos_paradero_tiempo"
+                    android:layout_marginTop="10dp"
+                    fontPath="fonts/TSInfReg.otf"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40dp"
+                    android:text="Entre 05 y 09 min."
+                    android:textColor="@color/black"
+                    android:textSize="12sp" />
+
+                <ImageView
+                    android:layout_alignParentLeft="true"
+                    android:id="@+id/planificador_itinerario_leg_1"
+                    android:layout_width="17dp"
+                    android:layout_height="16dp"
+                    android:layout_marginLeft="13dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/detalleparadero_reloj" />
 
 
-    <TextView
-        android:layout_toRightOf="@id/recorridos_paradero_servicio"
-        android:id="@+id/recorridos_paradero_distancia"
-        android:layout_marginTop="28dp"
-        fontPath="fonts/TSInfReg.otf"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="40dp"
-        android:text="2540 mts."
-        android:textColor="@color/gray"
-        android:textSize="12sp" />
+                <TextView
+                    android:layout_alignParentLeft="true"
+                    android:id="@+id/recorridos_paradero_distancia"
+                    android:layout_marginTop="28dp"
+                    fontPath="fonts/TSInfReg.otf"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40dp"
+                    android:text="2540 mts."
+                    android:textColor="@color/gray"
+                    android:textSize="12sp" />
 
-    <ImageView
-        android:layout_toRightOf="@id/recorridos_paradero_servicio"
-        android:layout_width="24dp"
-        android:layout_height="5dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="32dp"
-        android:background="@drawable/detalleparadero_distancia" />
+                <ImageView
+                    android:layout_alignParentLeft="true"
+                    android:layout_width="24dp"
+                    android:layout_height="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="32dp"
+                    android:background="@drawable/detalleparadero_distancia" />
 
-    <ImageView
-        android:layout_width="29dp"
-        android:layout_height="23dp"
-        android:layout_marginRight="6dp"
-        android:layout_marginTop="14dp"
-        android:layout_alignRight="@id/recorridos_paradero_container"
-        android:background="@drawable/detalleparadero_forward" />
+                <ImageView
+                    android:layout_width="29dp"
+                    android:layout_height="23dp"
+                    android:layout_marginRight="6dp"
+                    android:layout_marginTop="14dp"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/detalleparadero_forward" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/recorridos_paradero_container_right"
+                android:layout_marginTop="2dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="10dp"
+
+                android:layout_width="wrap_content"
+                android:layout_height="46dp"
+                android:background="@color/white"
+                >
+
+                <TextView
+                    android:layout_alignParentLeft="true"
+
+                    android:id="@+id/recorridos_paradero_tiempo_2"
+                    android:layout_marginTop="10dp"
+                    fontPath="fonts/TSInfReg.otf"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40dp"
+                    android:text="Entre 06 y 10 min."
+                    android:textColor="@color/black"
+                    android:textSize="12sp" />
+
+                <ImageView
+                    android:layout_alignParentLeft="true"
+                    android:id="@+id/planificador_itinerario_leg_2"
+                    android:layout_width="17dp"
+                    android:layout_height="16dp"
+                    android:layout_marginLeft="13dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/detalleparadero_reloj" />
+
+
+                <TextView
+                    android:layout_alignParentLeft="true"
+                    android:id="@+id/recorridos_paradero_distancia_2"
+                    android:layout_marginTop="28dp"
+                    fontPath="fonts/TSInfReg.otf"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40dp"
+                    android:text="2540 mts."
+                    android:textColor="@color/gray"
+                    android:textSize="12sp" />
+
+                <ImageView
+                    android:layout_alignParentLeft="true"
+                    android:layout_width="24dp"
+                    android:layout_height="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="32dp"
+                    android:background="@drawable/detalleparadero_distancia" />
+
+                <ImageView
+                    android:onClick="onClick"
+                    android:layout_width="29dp"
+                    android:layout_height="23dp"
+                    android:layout_marginRight="6dp"
+                    android:layout_marginTop="14dp"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/detalleparadero_forward" />
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+
+
+    </ScrollView>
+    
+
+
 
 
 

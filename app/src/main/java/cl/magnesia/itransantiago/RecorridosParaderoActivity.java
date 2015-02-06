@@ -8,7 +8,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -30,11 +34,13 @@ import java.util.Map;
 
 import cl.magnesia.itransantiago.models.Paradero;
 import cl.magnesia.itransantiago.models.Tramo;
+import cl.magnesia.itransantiago.widgets.RecorridosParaderoAdapter;
 
 
 public class RecorridosParaderoActivity extends BaseActivity {
 
     public Button btnFavorito;
+    public ListView listView;
 
     public Paradero paradero;
 
@@ -57,15 +63,20 @@ public class RecorridosParaderoActivity extends BaseActivity {
         TextView textView = (TextView)findViewById(R.id.header_titulo);
         textView.setText(String.format("Paradero %s", paradero.code));
 
-        findViewById(R.id.recorridos_paradero_row_1).setVisibility(View.GONE);
-        findViewById(R.id.recorridos_paradero_row_2).setVisibility(View.GONE);
-        findViewById(R.id.recorridos_paradero_row_3).setVisibility(View.GONE);
-        findViewById(R.id.recorridos_paradero_row_4).setVisibility(View.GONE);
-        findViewById(R.id.recorridos_paradero_row_5).setVisibility(View.GONE);
+        listView = (ListView) findViewById(R.id.recorridos_paradero_list_view);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                                            @Override
+                                            public void onItemClick(AdapterView<?> parent, final View view,
+                                                                    int position, long id) {
+                                                Log.d("iTransantiago", "oli");
+                                            }
+                                        });
 
         // chequear favorito
         btnFavorito = (Button) findViewById(R.id.header_btn_favorito);
-        if(Paradero.find(Paradero.class, "stopID = ?", paradero.stopID).isEmpty())
+
+        if(null == Paradero.findByStopID(paradero.stopID))
         {
             btnFavorito.setBackgroundResource(R.drawable.btn_guardar);
         }
@@ -93,55 +104,25 @@ public class RecorridosParaderoActivity extends BaseActivity {
 
                 try {
                     JSONArray items = response.getJSONObject("servicios").getJSONArray("item");
-                    for(int i = 0; i < 5; i++)
+
+                    JSONObject[] values = new JSONObject[items.length()];
+                    for(int i = 0; i < items.length(); i++)
                     {
-                        int id = 0;
-                        switch(i)
-                        {
-                            case 0:
-                                id = R.id.recorridos_paradero_row_1;
-                                break;
-                            case 1:
-                                id = R.id.recorridos_paradero_row_2;
-                                break;
-                            case 2:
-                                id = R.id.recorridos_paradero_row_3;
-                                break;
-                            case 3:
-                                id = R.id.recorridos_paradero_row_4;
-                                break;
-                            case 4:
-                                id = R.id.recorridos_paradero_row_5;
-                                break;
-
-                        }
-                        View view = (View)findViewById(id);
-
-                        if(i < items.length())
-                        {
-                            view.setVisibility(View.VISIBLE);
-
-                            JSONObject item = items.getJSONObject(i);
-
-                            Log.d("iTransantiago", item.toString());
-
-                            String servicio = item.getString("servicio");
-                            TextView textViewServicio = (TextView)view.findViewById(R.id.recorridos_paradero_servicio);
-                            textViewServicio.setText(servicio);
-
-                            String tiempo = item.getString("horaprediccionbus1");
-                            TextView textViewTiempo = (TextView)view.findViewById(R.id.recorridos_paradero_tiempo);
-                            textViewTiempo.setText(tiempo);
-
-                            int distancia = item.getInt("distanciabus1");
-                            TextView textViewDistancia = (TextView)view.findViewById(R.id.recorridos_paradero_distancia);
-                            textViewDistancia.setText(String.format("%d mts.", distancia));
-                        }
-                        else
-                        {
-                            view.setVisibility(View.GONE);
-                        }
+                        values[i] = items.getJSONObject(i);
                     }
+
+                    listView.setAdapter(new RecorridosParaderoAdapter(RecorridosParaderoActivity.this, values));
+                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, final View view,
+                                                int position, long id) {
+                            Log.d("iTransantiago", "oli----");
+
+                            ScrollView scrollView = (ScrollView) parent.findViewById(R.id.recorridos_paradero_scroll);
+                            scrollView.scrollTo(500, 0);
+                        }
+                    });
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -163,14 +144,14 @@ public class RecorridosParaderoActivity extends BaseActivity {
 
     public void onClick(View view)
     {
+        Log.d("iTransantiago", "click....");
         if(view.getId() == R.id.header_btn_back)
         {
             finish();
         }
         else if(view.getId() == R.id.header_btn_favorito)
         {
-            List<Paradero> paraderos = Paradero.find(Paradero.class, "stopID = ?", paradero.stopID);
-            Paradero found = paraderos.isEmpty() ? paraderos.get(0) : null;
+            Paradero found = Paradero.findByStopID(paradero.stopID);
             if(found == null)
             {
                 paradero.save();
