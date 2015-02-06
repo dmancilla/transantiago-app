@@ -16,6 +16,7 @@
             android:layout_height="0dp"
             android:layout_centerHorizontal="true"/>
         <Button
+            android:background="@color/green_favorite_on"
             android:onClick="onClick"
             android:id="@+id/favoritos_btn_rutas"
             android:layout_width="0dp"
@@ -25,6 +26,7 @@
             android:layout_alignParentLeft="true"
             android:text="Rutas"/>
         <Button
+            android:background="@color/green_favorite_off"
             android:onClick="onClick"
             android:id="@+id/favoritos_btn_paraderos"
             android:paddingLeft="0dp"

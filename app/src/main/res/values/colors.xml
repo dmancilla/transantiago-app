@@ -10,6 +10,10 @@
     
     <item name="green_light" type="color">#FF59D378</item>
 
+    <item name="green_favorite_on" type="color">#FF0AD278</item>
+    <item name="green_favorite_off" type="color">#FF079354</item>
+
+
     <item name="green_background" type="color">#FF08D379</item>
     <item name="green_80" type="color">#CC023924</item>
 
