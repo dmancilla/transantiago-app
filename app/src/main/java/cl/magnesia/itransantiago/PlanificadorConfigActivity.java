@@ -74,7 +74,7 @@ public class PlanificadorConfigActivity extends BaseActivity implements View.OnF
 
         // header
         View view = (View)findViewById(R.id.header);
-        Button button = (Button) view.findViewById(R.id.header_btn_back);
+        Button button = (Button) view.findViewById(R.id.header_btn_close);
         button.setVisibility(View.VISIBLE);
 
         TextView textView = (TextView)view.findViewById(R.id.header_titulo);
@@ -97,7 +97,7 @@ public class PlanificadorConfigActivity extends BaseActivity implements View.OnF
 		Log.d(TAG, "view. " + view.getClass());
 		Log.d(TAG, "view. " + view.getId());
 
-        if( view.getId() == R.id.header_btn_back)
+        if( view.getId() == R.id.header_btn_close)
         {
             finish();
         }
