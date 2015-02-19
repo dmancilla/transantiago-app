@@ -6,7 +6,7 @@
     tools:context="cl.magnesia.itransantiago.PlanificadorConfigActivity"
     tools:ignore="MissingPrefix" >
 
-    <include layout="@layout/header" android:id="@+id/header" />
+    <include android:id="@+id/header" layout="@layout/header" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -39,7 +39,6 @@
                 <!-- origen -->
 
                 <EditText
-                    android:inputType="textNoSuggestions"
                     android:id="@+id/planificador_origen"
                     fontPath="fonts/TSMapLigera.otf"
                     android:layout_width="match_parent"
@@ -47,8 +46,10 @@
                     android:layout_marginBottom="20dp"
                     android:background="@color/white"
                     android:hint="Dirección de origen"
+                    android:inputType="textNoSuggestions"
                     android:paddingLeft="20dp"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/gray" />
 
                 <ImageView
 
@@ -69,7 +70,6 @@
                 <!-- destino -->
 
                 <EditText
-                    android:inputType="textNoSuggestions"
                     android:id="@+id/planificador_destino"
                     fontPath="fonts/TSMapLigera.otf"
                     android:layout_width="match_parent"
@@ -77,8 +77,10 @@
                     android:layout_below="@id/planificador_origen"
                     android:background="@color/white"
                     android:hint="Dirección de destino"
+                    android:inputType="textNoSuggestions"
                     android:paddingLeft="20dp"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/gray" />
 
                 <ImageView
                     android:layout_width="wrap_content"
