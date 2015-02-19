@@ -1,0 +1,53 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="cl.magnesia.itransantiago.ParaderosBusquedaActivity"
+    tools:ignore="MissingPrefix" >
+
+    <include android:id="@+id/header" layout="@layout/header" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/header"
+        android:background="@color/green_background"
+        android:orientation="vertical">
+
+        <TextView
+            fontPath="fonts/TSInfReg.otf"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/paraderos_busqueda"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+        
+        <EditText
+            android:id="@+id/paraderos_codigo"
+            android:layout_width="fill_parent"
+            android:layout_height="48dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="6dp"
+            android:background="@color/white"
+            android:hint="@string/paraderos_busqueda_placeholder"
+            android:paddingLeft="10dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray"
+            android:textSize="32sp" />
+
+        <Button
+            android:id="@+id/paraderos_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/btn_ok"
+            android:onClick="onClick" />
+
+        </LinearLayout>
+
+
+</RelativeLayout>

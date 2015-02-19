@@ -74,8 +74,17 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".AcercaActivity"
-            android:label="@string/title_activity_acerca"
+            android:name=".ParaderosBusquedaActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".PuntosBIPActivity"
+            android:label="PuntosBIPActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".PuntosBIPDetalleActivity"
+            android:label="PuntosBIPDetalleActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity

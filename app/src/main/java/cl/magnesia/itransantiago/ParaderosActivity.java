@@ -30,6 +30,7 @@ import com.google.maps.android.ui.IconGenerator;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -69,7 +70,7 @@ public class ParaderosActivity extends BaseFragmentActivity implements GoogleMap
 		map = fragment.getExtendedMap();
         map.getUiSettings().setRotateGesturesEnabled(false);
         map.setOnMapLoadedCallback(this);
-        map.setClustering(new ClusteringSettings().clusterOptionsProvider(new MyClusterOptionsProvider(this)).enabled(true).addMarkersDynamically(true);
+        map.setClustering(new ClusteringSettings().clusterOptionsProvider(new MyClusterOptionsProvider(this)).enabled(true).addMarkersDynamically(true));
 
         // SETUP HEADER
         // header
@@ -127,5 +128,14 @@ public class ParaderosActivity extends BaseFragmentActivity implements GoogleMap
     @Override
     public void onMapLoaded() {
         map.moveCamera(CameraUpdateFactory.newLatLngBounds(Config.latLngBoundsStgo, 0));
+    }
+
+    public void onClick(View view)
+    {
+        if(view.getId() == R.id.header_btn_buscar)
+        {
+            Intent intent = new Intent(this, ParaderosBusquedaActivity.class);
+            startActivity(intent);
+        }
     }
 }

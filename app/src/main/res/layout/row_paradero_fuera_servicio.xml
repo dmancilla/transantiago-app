@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="50dp"
+    android:background="@color/green_background"
+
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/recorridos_paradero_servicio"
+        android:layout_width="78dp"
+        android:layout_height="35dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="8dp"
+
+        android:background="@drawable/detalleparadero_bus_bg"
+        android:gravity="center_vertical"
+        android:paddingLeft="4dp"
+        android:text="201ec"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
+
+    <TextView
+        android:id="@+id/recorridos_paradero_tiempo"
+        android:layout_width="wrap_content"
+        android:layout_toRightOf="@id/recorridos_paradero_servicio"
+        android:layout_height="46dp"
+        android:layout_marginTop="2dp"
+        android:layout_alignParentRight="true"
+
+        android:gravity="center_vertical"
+        android:layout_marginLeft="10dp"
+        android:paddingLeft="10dp"
+
+        android:background="@color/white"
+
+        android:layout_marginRight="10dp"
+        fontPath="fonts/TSInfReg.otf"
+        android:text="Fuera de horario de operación para este servicio"
+        android:textColor="@color/black"
+        android:textSize="12sp" />
+
+
+</RelativeLayout>
