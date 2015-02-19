@@ -160,6 +160,34 @@ public class MyDatabase extends SQLiteAssetHelper {
         return paraderos;
     }
 
+    public Paradero findParaderoByID(String ID)
+    {
+
+        SQLiteDatabase db = getReadableDatabase();
+
+
+
+        Cursor cursor = db.rawQuery("SELECT stops.stop_id, stops.stop_code, stops.stop_name, stops.stop_lat, stops.stop_lon " +
+                        "FROM stops " +
+                "WHERE stop_id = ?",
+                new String[] { ID });
+
+        if(cursor.moveToNext())
+        {
+            String stopID = cursor.getString(0);
+            String code = cursor.getString(1);
+            String name = cursor.getString(2);
+            double lat = cursor.getDouble(3);
+            double lng = cursor.getDouble(4);
+
+            Paradero paradero = new Paradero(stopID, code, name, lat, lng);
+            return paradero;
+        }
+        else {
+            return null;
+        }
+    }
+
     public List<LatLng> getShapeByTripId(String tripId)
     {
 
