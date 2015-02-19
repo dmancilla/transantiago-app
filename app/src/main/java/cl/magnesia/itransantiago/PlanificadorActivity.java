@@ -1,5 +1,6 @@
 package cl.magnesia.itransantiago;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,11 +10,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import cl.magnesia.itransantiago.misc.SessionManager;
 import cl.magnesia.itransantiago.models.Tramo;
 import cl.magnesia.itransantiago.models.Viaje;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -26,6 +34,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -45,20 +54,20 @@ import android.widget.Toast;
 import static cl.magnesia.itransantiago.Config.TAG;
 
 public class PlanificadorActivity extends FragmentActivity implements
-		LocationListener, GoogleMap.OnMyLocationChangeListener, GoogleMap.OnInfoWindowClickListener {
+        LocationListener, GoogleMap.OnMyLocationChangeListener, GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMapLoadedCallback {
 
-	private static final long MIN_TIME = 400;
-	private static final float MIN_DISTANCE = 1000;
-	private static final int colorWalk = Color.rgb(0, 172, 235);
-	private static final int colorBus = Color.rgb(116, 176, 19);
-	private static final int colorSubway = Color.rgb(227, 0, 0);
-	private GoogleMap map;
+    private static final long MIN_TIME = 400;
+    private static final float MIN_DISTANCE = 1000;
+    private static final int colorWalk = Color.rgb(0, 172, 235);
+    private static final int colorBus = Color.rgb(116, 176, 19);
+    private static final int colorSubway = Color.rgb(227, 0, 0);
+    private GoogleMap map;
     private RelativeLayout layoutResultados;
 
     private Button buttonFavorito;
     private TextView textViewDuracion;
     private TextView textViewBadge;
-	private LocationManager locationManager;
+    private LocationManager locationManager;
     private LatLng lastKnowLatLng;
 
     // estado
@@ -78,25 +87,25 @@ public class PlanificadorActivity extends FragmentActivity implements
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		//CalligraphyConfig.initDefault("fonts/TSInfReg.otf", R.attr.fontPath);
+        //CalligraphyConfig.initDefault("fonts/TSInfReg.otf", R.attr.fontPath);
 
-		setContentView(R.layout.activity_planificador);
+        setContentView(R.layout.activity_planificador);
 
         // header
         View view = (View)findViewById(R.id.header);
         Button button = (Button) view.findViewById(R.id.header_btn_buscar);
         button.setVisibility(View.VISIBLE);
 
-		SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-				.findFragmentById(R.id.planificador_mapa);
-		map = mapFragment.getMap();
-
-		map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-		map.setMyLocationEnabled(true);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.planificador_mapa);
+        map = mapFragment.getMap();
+        map.getUiSettings().setRotateGesturesEnabled(false);
+        map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        map.setMyLocationEnabled(true);
         map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
             @Override
             public View getInfoWindow(Marker marker) {
@@ -117,10 +126,11 @@ public class PlanificadorActivity extends FragmentActivity implements
             }
         });
         map.setOnInfoWindowClickListener(this);
+        map.setOnMapLoadedCallback(this);
 
-		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		locationManager.requestLocationUpdates(
-				LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(
+                LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
 
         layoutResultados = (RelativeLayout) findViewById(R.id.planificador_resultados);
         layoutResultados.setVisibility(View.GONE);
@@ -129,13 +139,13 @@ public class PlanificadorActivity extends FragmentActivity implements
         textViewDuracion = (TextView) findViewById(R.id.planificador_resultados_duracion);
         textViewBadge = (TextView) findViewById(R.id.planificador_text_view_mas_rutas);
 
-	}
+    }
 
-	public void onClick(View view) {
-		Log.d("iTransantiago", "click");
-		if (view.getId() == R.id.header_btn_buscar) // TODO: check button
-		{
-			Intent intent = new Intent(this, PlanificadorConfigActivity.class);
+    public void onClick(View view) {
+        Log.d("iTransantiago", "click");
+        if (view.getId() == R.id.header_btn_buscar) // TODO: check button
+        {
+            Intent intent = new Intent(this, PlanificadorConfigActivity.class);
 
             double lat = map.getMyLocation().getLatitude();
             double lng = map.getMyLocation().getLongitude();
@@ -143,9 +153,9 @@ public class PlanificadorActivity extends FragmentActivity implements
             intent.putExtra("LATITUDE", lat);
             intent.putExtra("LONGITUDE", lng);
 
-			startActivityForResult(intent, Config.ACTIVITY_PLANIFICADOR_CONFIG);
+            startActivityForResult(intent, Config.ACTIVITY_PLANIFICADOR_CONFIG);
 
-		}
+        }
         else if(view.getId() == R.id.planificador_btn_mas_rutas)
         {
             Intent intent = new Intent(this, PlanificadorItinerariosActivity.class);
@@ -181,43 +191,45 @@ public class PlanificadorActivity extends FragmentActivity implements
 
 
         }
-	}
+    }
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-		Log.d(TAG, "requestCode. " + requestCode);
-		Log.d(TAG, "resultCode. " + resultCode);
+        Log.d(TAG, "requestCode. " + requestCode);
+        Log.d(TAG, "resultCode. " + resultCode);
 
-		if (Config.ACTIVITY_BACK == resultCode) {
+        if (Config.ACTIVITY_BACK == resultCode) {
 
-		}
+        }
 
-		else if (Config.ACTIVITY_PLANIFICADOR_CONFIG == resultCode) {
+        else if (Config.ACTIVITY_PLANIFICADOR_CONFIG == resultCode) {
 
-			try {
+            try {
 
                 selectedItinerario = 0;
                 viaje = null;
 
-				Bundle bundle = data.getExtras();
+                Bundle bundle = data.getExtras();
                 origen = bundle.getString("origen");
                 destino = bundle.getString("destino");
-				response = new JSONObject(
-						bundle.getString("response"));
+                response = new JSONObject(
+                        bundle.getString("response"));
 
-				plan = response.getJSONObject("plan");
+                plan = response.getJSONObject("plan");
                 itineraries = plan.getJSONArray("itineraries");
 
                 displayRuta();
 
 
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+            } catch (JSONException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
 
-		}
+        }
         else if (Config.ACTIVITY_PLANIFICADOR_ITINERARIO == resultCode) {
 
 
@@ -230,12 +242,14 @@ public class PlanificadorActivity extends FragmentActivity implements
                 displayRuta();
             } catch (JSONException e) {
                 e.printStackTrace();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
             }
 
         }
-	}
+    }
 
-    private void displayRuta() throws JSONException {
+    private void displayRuta() throws JSONException, UnsupportedEncodingException {
         JSONObject itinerary = itineraries
                 .getJSONObject(selectedItinerario);
 
@@ -319,8 +333,8 @@ public class PlanificadorActivity extends FragmentActivity implements
                 u = 0.0f;
                 v = 1.0f;
             } else if (mode.equals("SUBWAY")) {
-                title = String.format("BUS %s", leg.getString("route"));
-                snippet = String.format("Metro %s", leg.getString("route"));
+                title = String.format(new String(leg.getString("route").getBytes("ISO-8859-1")), "UTF-8");
+                snippet = String.format("Metro %s", new String(leg.getString("route").getBytes("ISO-8859-1")), "UTF-8");
                 color = colorSubway;
                 bitmapDescriptor = bitmapDescriptorSubway;
                 u = 0.0f;
@@ -359,73 +373,75 @@ public class PlanificadorActivity extends FragmentActivity implements
         layoutResultados.setVisibility(View.VISIBLE);
     }
 
-	/**
-	 * Method to decode polyline points Courtesy :
-	 * jeffreysambells.com/2010/05/27
-	 * /decoding-polylines-from-google-maps-direction-api-with-java
-	 * */
-	private List<LatLng> decodePoly(String encoded) {
+    /**
+     * Method to decode polyline points Courtesy :
+     * jeffreysambells.com/2010/05/27
+     * /decoding-polylines-from-google-maps-direction-api-with-java
+     * */
+    private List<LatLng> decodePoly(String encoded) {
 
-		List<LatLng> poly = new ArrayList<LatLng>();
-		int index = 0, len = encoded.length();
-		int lat = 0, lng = 0;
+        List<LatLng> poly = new ArrayList<LatLng>();
+        int index = 0, len = encoded.length();
+        int lat = 0, lng = 0;
 
-		while (index < len) {
-			int b, shift = 0, result = 0;
-			do {
-				b = encoded.charAt(index++) - 63;
-				result |= (b & 0x1f) << shift;
-				shift += 5;
-			} while (b >= 0x20);
-			int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
-			lat += dlat;
+        while (index < len) {
+            int b, shift = 0, result = 0;
+            do {
+                b = encoded.charAt(index++) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+            } while (b >= 0x20);
+            int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+            lat += dlat;
 
-			shift = 0;
-			result = 0;
-			do {
-				b = encoded.charAt(index++) - 63;
-				result |= (b & 0x1f) << shift;
-				shift += 5;
-			} while (b >= 0x20);
-			int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
-			lng += dlng;
+            shift = 0;
+            result = 0;
+            do {
+                b = encoded.charAt(index++) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+            } while (b >= 0x20);
+            int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+            lng += dlng;
 
-			LatLng p = new LatLng((((double) lat / 1E5)),
-					(((double) lng / 1E5)));
-			poly.add(p);
-		}
+            LatLng p = new LatLng((((double) lat / 1E5)),
+                    (((double) lng / 1E5)));
+            poly.add(p);
+        }
 
-		return poly;
-	}
+        return poly;
+    }
 
-	@Override
-	public void onStatusChanged(String provider, int status, Bundle extras) {
-		// TODO Auto-generated method stub
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public void onProviderEnabled(String provider) {
-		// TODO Auto-generated method stub
+    @Override
+    public void onProviderEnabled(String provider) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public void onProviderDisabled(String provider) {
-		// TODO Auto-generated method stub
+    @Override
+    public void onProviderDisabled(String provider) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public void onLocationChanged(Location location) {
-		LatLng latLng = new LatLng(location.getLatitude(),
-				location.getLongitude());
-		CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng,
-				15);
-		map.animateCamera(cameraUpdate);
-		locationManager.removeUpdates(this);
+    @Override
+    public void onLocationChanged(Location location) {
+        LatLng latLng = new LatLng(location.getLatitude(),
+                location.getLongitude());
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng,
+                15);
+        map.animateCamera(cameraUpdate);
+        locationManager.removeUpdates(this);
 
-	}
+        lastKnowLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+    }
 
     @Override
     public void onMyLocationChange(Location location) {
@@ -442,5 +458,97 @@ public class PlanificadorActivity extends FragmentActivity implements
 
         startActivityForResult(intent, Config.ACTIVITY_PLANIFICADOR_TRAMO);
 
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        if(SessionManager.getInstance().to != null)
+        {
+            // iniciar una búsqueda
+            LatLng to = SessionManager.getInstance().to;
+
+            Log.d("iTransantiago", "from => " + lastKnowLatLng);
+            Log.d("iTransantiago", "to => " + to.latitude);
+
+            RequestQueue queue = Volley.newRequestQueue(this);
+
+            String url = String
+                    .format("http://itransantiago.modernizacion.gob.cl:8080/opentripplanner-api-webapp/ws/plan?fromPlace=%f,%f&toPlace=%f,%f&maxWalkDistance=1600",
+                            lastKnowLatLng.latitude, lastKnowLatLng.longitude, to.latitude, to.longitude);
+
+            Log.d("iTransantiago", url);
+
+            final ProgressDialog dialog = ProgressDialog.show(this,
+                    "iTransantiago", "Cargando");
+
+            // Request a string response from the provided URL.
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,
+                    url, null, new Response.Listener<JSONObject>() {
+
+                @Override
+                public void onResponse(JSONObject response) {
+
+                    dialog.dismiss();
+
+                    handleRespose(response);
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.d("iTransantiago", error.getMessage());
+                }
+            });
+            // Add the request to the RequestQueue.
+            queue.add(request);
+
+
+            // limpia la sesión
+            SessionManager.getInstance().to = null;
+
+        }
+    }
+
+
+    public void handleRespose(JSONObject response) {
+
+        if (response.isNull("plan")) {
+            Utils.errorDialog(this, "Ruta no encontrada");
+
+        } else {
+            try {
+
+
+                Log.d("iTransantiago", response.toString());
+
+                selectedItinerario = 0;
+                viaje = null;
+
+
+                this.response = response;
+
+                plan = response.getJSONObject("plan");
+                itineraries = plan.getJSONArray("itineraries");
+
+                displayRuta();
+            }
+            catch(JSONException exception)
+            {
+                exception.printStackTrace();
+            }
+            catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
+
+    @Override
+    public void onMapLoaded() {
+        map.moveCamera(CameraUpdateFactory.newLatLngBounds(Config.latLngBoundsStgo, 0));
     }
 }
