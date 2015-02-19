@@ -1,7 +1,9 @@
 package cl.magnesia.itransantiago;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
@@ -26,19 +28,21 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.geometry.Point;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cl.magnesia.itransantiago.db.MyDatabase;
 import cl.magnesia.itransantiago.models.Paradero;
 import cl.magnesia.itransantiago.models.Ruta;
 import cl.magnesia.itransantiago.models.Tramo;
 import cl.magnesia.itransantiago.models.Trip;
 
 
-public class RecorridosResultadoActivity extends BaseFragmentActivity implements GoogleMap.InfoWindowAdapter, GoogleMap.OnInfoWindowClickListener {
+public class RecorridosResultadoActivity extends BaseFragmentActivity implements GoogleMap.InfoWindowAdapter, GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMapLoadedCallback {
 
     private GoogleMap map;
     private TextView textHeader;
@@ -48,9 +52,16 @@ public class RecorridosResultadoActivity extends BaseFragmentActivity implements
 
     // estado
     private Ruta ruta;
+    private Trip trip;
+    private List<LatLng> points;
+    private List<Paradero> paraderos;
+
     private String servicio;
     private int direccion = 0;
     private Map<String, Paradero> paraderosMap = new HashMap<String, Paradero>();
+
+    // UI
+    private ProgressDialog dialog;
 
     // zoom checker
     private Handler handler;
@@ -85,7 +96,8 @@ public class RecorridosResultadoActivity extends BaseFragmentActivity implements
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.recorridos_mapa);
         map = mapFragment.getMap();
-
+        map.getUiSettings().setRotateGesturesEnabled(false);
+        map.setOnMapLoadedCallback(this);
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         map.setMyLocationEnabled(true);
         map.setInfoWindowAdapter(this);
@@ -141,7 +153,6 @@ public class RecorridosResultadoActivity extends BaseFragmentActivity implements
         }
         else if(view.getId() == R.id.recorridos_layout_direccion)
         {
-            Log.d("iTransantiago", "layout....");
             direccion = 1 - direccion;
             displayRecorrido();
         }
@@ -150,76 +161,98 @@ public class RecorridosResultadoActivity extends BaseFragmentActivity implements
     private void displayRecorrido()
     {
 
-        map.clear();
-        layoutDireccion.setVisibility(View.VISIBLE);
 
-        Log.d("iTransantiago", "servicio. " + servicio);
+            dialog = new ProgressDialog(this, R.style.MyTheme);
+            dialog.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
+            dialog.show();
 
-        MyDatabase db = new MyDatabase(this);
-        ruta = db.getRuta(servicio);
-        if(null == ruta)
-        {
-            Utils.errorDialog(this,
-                    "Servicio no encontrado.");
-            return;
-        }
+            layoutDireccion.setVisibility(View.GONE);
 
-        Trip trip = db.getTripByRouteId(servicio, direccion);
+            new AsyncTask<Object, Void, Object>()
+            {
 
-        List<LatLng> points = db.getShapeByTripId(trip.tripID);
-        List<Paradero> paraderos = db.getParaderosByTripId(trip.tripID);
+                private MyDatabase database = new MyDatabase(getApplicationContext());
+
+                @Override
+                protected Object doInBackground(Object[] params) {
+
+                    Log.d("iTransantiago", "servicio. " + servicio);
 
 
-        LatLngBounds bounds = LatLngBounds
-                .builder()
-                .include(
-                        new LatLng(points.get(0).latitude, points.get(0).longitude)).build();
-        for (int j = 0; j < points.size(); j++) {
-            bounds = bounds.including(points.get(j));
-        }
-        map.addPolyline(new PolylineOptions().addAll(points).color(getResources().getColor(R.color.polyline_bus)));
+                    ruta = database.getRuta(servicio);
+                    if(ruta == null)
+                        return null;
 
-        // agrega paraderos
-        BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.icon_bus);
-        for(Paradero paradero : paraderos)
-        {
-            MarkerOptions markerOptions = new MarkerOptions().position(paradero.latLng)
-                    .title("Paradero de Bus")
-                    .snippet(paradero.name)
-                    .icon(icon)
-                    .anchor(0.0f, 1.0f);
+                    trip = database.getTripByRouteId(servicio, direccion);
 
-            Marker marker = map.addMarker(markerOptions);
-            paraderosMap.put(marker.getId(), paradero);
-            markers.add(marker);
-        }
+                    points = database.getShapeByTripId(trip.tripID);
+                    paraderos = database.getParaderosByTripId(trip.tripID);
 
-        map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
 
-        textDireccion.setText(String.format("Dirección: Hacia %s", trip.tripHeadSign));
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Object result) {
+
+
+                        setupRecorrido();
+
+                }
+            }.execute();
+
+
+
     }
 
+    public void setupRecorrido()
+    {
+        runOnUiThread(new Runnable()
+        {
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_recorridos_resultado, menu);
-        return true;
-    }
+            @Override
+            public void run() {
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+                if(ruta == null)
+                {
+                    Utils.errorDialog(RecorridosResultadoActivity.this, "Número de recorrido no fue encontrado");
+                    return;
+                }
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+                map.clear();
 
-        return super.onOptionsItemSelected(item);
+                LatLngBounds bounds = LatLngBounds
+                        .builder()
+                        .include(
+                                new LatLng(points.get(0).latitude, points.get(0).longitude)).build();
+                for (int j = 0; j < points.size(); j++) {
+                    bounds = bounds.including(points.get(j));
+                }
+                map.addPolyline(new PolylineOptions().addAll(points).color(getResources().getColor(R.color.polyline_bus)));
+
+                // agrega paraderos
+                BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.icon_bus);
+                for(Paradero paradero : paraderos)
+                {
+                    MarkerOptions markerOptions = new MarkerOptions().position(paradero.latLng)
+                            .title("Paradero de Bus")
+                            .snippet(paradero.name)
+                            .icon(icon)
+                            .anchor(0.0f, 1.0f);
+
+                    Marker marker = map.addMarker(markerOptions);
+                    paraderosMap.put(marker.getId(), paradero);
+                    markers.add(marker);
+                }
+
+                map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
+
+                layoutDireccion.setVisibility(View.VISIBLE);
+                textDireccion.setText(String.format("Dirección: Hacia %s", trip.tripHeadSign));
+
+                dialog.dismiss();
+            }
+        });
     }
 
     // InfowWindowAdapter
@@ -252,13 +285,15 @@ public class RecorridosResultadoActivity extends BaseFragmentActivity implements
 
         Paradero paradero = paraderosMap.get(marker.getId());
 
-        Log.d("iTransantiago", "click. " + paradero.name);
-
         Intent intent = new Intent(this, RecorridosParaderoActivity.class);
-        intent.putExtra("PARADERO", paradero);
+        intent.putExtra(Config.BUNDLE_PARADERO, paradero);
 
         startActivityForResult(intent, Config.ACTIVITY_PLANIFICADOR_TRAMO);
 
     }
 
+    @Override
+    public void onMapLoaded() {
+        map.moveCamera(CameraUpdateFactory.newLatLngBounds(Config.latLngBoundsStgo, 0));
+    }
 }

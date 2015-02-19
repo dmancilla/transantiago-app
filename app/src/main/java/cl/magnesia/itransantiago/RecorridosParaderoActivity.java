@@ -51,7 +51,7 @@ public class RecorridosParaderoActivity extends BaseActivity {
         setContentView(R.layout.activity_recorridos_paradero);
 
         Bundle bundle = getIntent().getExtras();
-        paradero = (Paradero) bundle.getSerializable("PARADERO");
+        paradero = (Paradero) bundle.getSerializable(Config.BUNDLE_PARADERO);
 
         // header
         Button button = (Button) findViewById(R.id.header_btn_back);
@@ -103,13 +103,26 @@ public class RecorridosParaderoActivity extends BaseActivity {
             public void onResponse(JSONObject response) {
 
                 try {
-                    JSONArray items = response.getJSONObject("servicios").getJSONArray("item");
 
-                    JSONObject[] values = new JSONObject[items.length()];
-                    for(int i = 0; i < items.length(); i++)
+                    JSONObject servicios = response.getJSONObject("servicios");
+                    Object item = servicios.get("item");
+
+                    JSONObject[] aux;
+                    if(item instanceof JSONObject)
                     {
-                        values[i] = items.getJSONObject(i);
+                        aux = new JSONObject[] { (JSONObject) item };
                     }
+                    else
+                    {
+                        JSONArray items = response.getJSONObject("servicios").getJSONArray("item");
+                        aux = new JSONObject[items.length()];
+                        for(int i = 0; i < items.length(); i++)
+                        {
+                            aux[i] = items.getJSONObject(i);
+                        }
+                    }
+
+                    final JSONObject[] values = aux;
 
                     listView.setAdapter(new RecorridosParaderoAdapter(RecorridosParaderoActivity.this, values));
                     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -117,10 +130,21 @@ public class RecorridosParaderoActivity extends BaseActivity {
                         @Override
                         public void onItemClick(AdapterView<?> parent, final View view,
                                                 int position, long id) {
-                            Log.d("iTransantiago", "oli----");
 
-                            ScrollView scrollView = (ScrollView) parent.findViewById(R.id.recorridos_paradero_scroll);
-                            scrollView.scrollTo(500, 0);
+                            View container = view.findViewById(R.id.recorridos_paradero_container);
+                            View containerRight = view.findViewById(R.id.recorridos_paradero_container_right);
+
+                            JSONObject item = values[position];
+                            if(item.isNull("horaprediccionbus2"))
+                                return;
+
+                            if(containerRight.getVisibility() == View.GONE){
+                                containerRight.setVisibility(View.VISIBLE);
+                            }
+                            else
+                            {
+                                containerRight.setVisibility(View.GONE);
+                            }
                         }
                     });
                 } catch (JSONException e) {

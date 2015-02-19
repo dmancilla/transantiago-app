@@ -48,7 +48,7 @@ import android.widget.TextView;
 
 import static cl.magnesia.itransantiago.Config.TAG;
 
-public class ParaderosActivity extends BaseFragmentActivity implements GoogleMap.OnMapLoadedCallback {
+public class ParaderosActivity extends BaseFragmentActivity implements GoogleMap.OnMapLoadedCallback, GoogleMap.InfoWindowAdapter, GoogleMap.OnInfoWindowClickListener {
 
     // UI
 	private GoogleMap map;
@@ -70,7 +70,9 @@ public class ParaderosActivity extends BaseFragmentActivity implements GoogleMap
 		map = fragment.getExtendedMap();
         map.getUiSettings().setRotateGesturesEnabled(false);
         map.setOnMapLoadedCallback(this);
-        map.setClustering(new ClusteringSettings().clusterOptionsProvider(new MyClusterOptionsProvider(this)).enabled(true).addMarkersDynamically(true));
+        map.setClustering(new ClusteringSettings().clusterOptionsProvider(new MyClusterOptionsProvider(this, R.color.green_background)).enabled(true).addMarkersDynamically(true));
+        map.setInfoWindowAdapter(this);
+        map.setOnInfoWindowClickListener(this);
 
         // SETUP HEADER
         // header
@@ -117,8 +119,11 @@ public class ParaderosActivity extends BaseFragmentActivity implements GoogleMap
             public void run() {
                 BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.icono_paradero);
 
-                for (Paradero paradero : paraderos)
-                    map.addMarker(new MarkerOptions().position(paradero.latLng).icon(icon));
+                for (Paradero paradero : paraderos) {
+
+                    Marker marker = map.addMarker(new MarkerOptions().title(paradero.name).snippet(paradero.code).position(paradero.latLng).icon(icon));
+                    marker.setData(paradero);
+                }
 
                 dialog.dismiss();
             }
@@ -137,5 +142,40 @@ public class ParaderosActivity extends BaseFragmentActivity implements GoogleMap
             Intent intent = new Intent(this, ParaderosBusquedaActivity.class);
             startActivity(intent);
         }
+    }
+
+    @Override
+    public View getInfoContents(Marker marker) {
+
+        if(marker.isCluster())
+            return null;
+
+        View view = getLayoutInflater().inflate(R.layout.marker_info_window, null);
+
+        TextView textTitulo = (TextView) view.findViewById(R.id.marker_titulo);
+        textTitulo.setText(marker.getTitle());
+
+        TextView textDescripcion = (TextView) view.findViewById(R.id.marker_descripcion);
+        textDescripcion.setText(marker.getSnippet());
+
+        view.findViewById(R.id.marker_btn_info).setVisibility(View.GONE);
+        view.findViewById(R.id.marker_btn_disclosure).setVisibility(View.VISIBLE);
+
+        return view;
+    }
+
+    @Override
+    public View getInfoWindow(Marker marker) {
+        return null;
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+
+        Paradero paradero = (Paradero ) marker.getData();
+
+        Intent intent = new Intent(this, RecorridosParaderoActivity.class);
+        intent.putExtra(Config.BUNDLE_PARADERO, paradero);
+        startActivity(intent);
     }
 }
