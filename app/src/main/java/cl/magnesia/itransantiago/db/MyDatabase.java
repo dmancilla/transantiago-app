@@ -1,10 +1,11 @@
-package cl.magnesia.itransantiago;
+package cl.magnesia.itransantiago.db;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import cl.magnesia.itransantiago.models.Paradero;
+import cl.magnesia.itransantiago.models.PuntoBIP;
 import cl.magnesia.itransantiago.models.Ruta;
 import cl.magnesia.itransantiago.models.Trip;
 
@@ -133,6 +134,8 @@ public class MyDatabase extends SQLiteAssetHelper {
 
         SQLiteDatabase db = getReadableDatabase();
 
+
+
         Cursor cursor = db.rawQuery("SELECT stops.stop_id, stops.stop_code, stops.stop_name, stops.stop_lat, stops.stop_lon " +
                         "FROM stop_times " +
                         "LEFT JOIN trips ON stop_times.trip_id=trips.trip_id " +
@@ -180,6 +183,32 @@ public class MyDatabase extends SQLiteAssetHelper {
         Log.d("iTransantiago", "size. " + latLngs.size());
         return latLngs;
 
+    }
+
+    public List<PuntoBIP> getPuntosBIP()
+    {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT entidad, direccion, comuna, horario, lat, lon FROM puntobip", null);
+
+        ArrayList<PuntoBIP> puntosBIP = new ArrayList<PuntoBIP>();
+        while(cursor.moveToNext())
+        {
+
+            String entidad = cursor.getString(0);
+            String direccion = cursor.getString(1);
+            String comuna = cursor.getString(2);
+            String horario = cursor.getString(3);
+            double lat = cursor.getDouble(4);
+            double lon = cursor.getDouble(5);
+
+            LatLng latLng = new LatLng(lat, lon);
+
+            PuntoBIP puntoBIP = new PuntoBIP(entidad, direccion, comuna, horario, latLng);
+            puntosBIP.add(puntoBIP);
+
+        }
+
+        return puntosBIP;
     }
 
 

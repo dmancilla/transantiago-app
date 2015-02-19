@@ -23,4 +23,7 @@
 
     <item name="marker_blue" type="color">#FF336AE3</item>
 
+    <item name="transparent" type="color">#00000000</item>
+
+
 </resources>

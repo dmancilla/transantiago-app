@@ -2,6 +2,7 @@ package cl.magnesia.itransantiago;
 
 import java.util.List;
 
+import cl.magnesia.itransantiago.db.MyDatabase;
 import cl.magnesia.itransantiago.misc.MyClusterOptionsProvider;
 import cl.magnesia.itransantiago.misc.iTransantiagoRenderer;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -27,6 +28,7 @@ import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
 
 import android.app.FragmentManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -35,6 +37,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -44,31 +47,14 @@ import android.widget.TextView;
 
 import static cl.magnesia.itransantiago.Config.TAG;
 
-public class ParaderosActivity extends BaseFragmentActivity implements GoogleMap.OnCameraChangeListener {
+public class ParaderosActivity extends BaseFragmentActivity implements GoogleMap.OnMapLoadedCallback {
 
+    // UI
 	private GoogleMap map;
+    private ProgressDialog dialog;
 
+    // data
 	private List<Paradero> paraderos;
-
-    private ClusterManager<Paradero> clusterManager;
-
-    private CameraPosition mPreviousCameraPosition;
-    private int mPreviousZoom;
-
-    @Override
-    public void onCameraChange(CameraPosition cameraPosition) {
-
-        int currentZoom = (int)cameraPosition.zoom;
-
-        if(Math.abs(mPreviousZoom - currentZoom ) > 0)
-        {
-            clusterManager.onCameraChange(cameraPosition);
-        }
-
-        mPreviousZoom = currentZoom;
-
-        Log.d("iTransantiago", "" + cameraPosition.zoom);
-    }
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +68,8 @@ public class ParaderosActivity extends BaseFragmentActivity implements GoogleMap
 				.findFragmentById(R.id.paraderos_mapa2);
 		map = fragment.getExtendedMap();
         map.getUiSettings().setRotateGesturesEnabled(false);
-        map.setClustering(new ClusteringSettings().clusterOptionsProvider(new MyClusterOptionsProvider(this)).addMarkersDynamically(true));
+        map.setOnMapLoadedCallback(this);
+        map.setClustering(new ClusteringSettings().clusterOptionsProvider(new MyClusterOptionsProvider(this)).enabled(true).addMarkersDynamically(true);
 
         // SETUP HEADER
         // header
@@ -90,55 +77,55 @@ public class ParaderosActivity extends BaseFragmentActivity implements GoogleMap
         Button button = (Button) view.findViewById(R.id.header_btn_buscar);
         button.setVisibility(View.VISIBLE);
 
-		MyDatabase db = new MyDatabase(this);
-
-		paraderos = db.getParaderos();
-
-		setUpClusterer();
+        loadParaderosBackground();
 
 	}
 
+    private void loadParaderosBackground()
+    {
+        dialog = new ProgressDialog(this, R.style.MyTheme);
+        dialog.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
+        dialog.show();
+        new AsyncTask<Object, Void, Object>()
+        {
+
+            private MyDatabase database = new MyDatabase(getApplicationContext());
+
+            @Override
+            protected Object doInBackground(Object[] params) {
+                paraderos = database.getParaderos();
 
 
+                return null;
+            }
 
-	private void setUpClusterer() {
-		// Declare a variable for the cluster manager.
+            @Override
+            protected void onPostExecute(Object result) {
+                addMarkers();
+            }
+        }.execute();
+    }
 
-		// Position the map.
-		map.moveCamera(CameraUpdateFactory.newLatLngZoom(Config.latLngStgo, 10));
+    public void addMarkers()
+    {
 
-        BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.icono_paradero);
+        runOnUiThread(new Runnable()
+        {
 
+            @Override
+            public void run() {
+                BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.icono_paradero);
 
-        //clusterManager = new ClusterManager<Paradero>(this, map);
-        //clusterManager.setRenderer(new ParaderosRenderer());
+                for (Paradero paradero : paraderos)
+                    map.addMarker(new MarkerOptions().position(paradero.latLng).icon(icon));
 
+                dialog.dismiss();
+            }
+        });
+    }
 
-
-		// Point the map's listeners at the listeners implemented by the cluster
-		// manager.
-		//map.setOnCameraChangeListener(this);
-        //map.setOnMarkerClickListener(clusterManager);
-
-
-		// Add cluster items (markers) to the cluster manager.
-
-		// for (int i = 0; i < 100,paraderos.size(); i++) {
-
-		Drawable drawable = getResources().getDrawable(
-				R.drawable.icono_paradero);
-
-		int count = 0;
-		for (int i = 0; i < paraderos.size(); i++) {
-
-			Paradero paradero = paraderos.get(i);
-			// clusterManager.addItem(paradero);
-
-
-            map.addMarker(new MarkerOptions().position(paradero.latLng).icon(icon));
-		}
-
-        // clusterManager.cluster();
-
-	}
+    @Override
+    public void onMapLoaded() {
+        map.moveCamera(CameraUpdateFactory.newLatLngBounds(Config.latLngBoundsStgo, 0));
+    }
 }
