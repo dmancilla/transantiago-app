@@ -1,8 +1,10 @@
 package cl.magnesia.itransantiago;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -14,7 +16,10 @@ import cl.magnesia.itransantiago.models.Viaje;
 import cl.magnesia.itransantiago.widgets.FavoritosParaderoAdapter;
 import cl.magnesia.itransantiago.widgets.FavoritosRutaAdapter;
 
-public class FavoritosActivity extends BaseActivity {
+public class FavoritosActivity extends BaseActivity implements AdapterView.OnItemClickListener {
+
+    private Viaje[] viajes;
+    private Paradero[] paraderos;
 
     public Button buttonRutas;
     public Button buttonParaderos;
@@ -36,10 +41,31 @@ public class FavoritosActivity extends BaseActivity {
         buttonParaderos = (Button) findViewById(R.id.favoritos_btn_paraderos);
 
         listView = (ListView) findViewById(R.id.favoritos_list_view);
-        listView.setAdapter(new FavoritosRutaAdapter(this, Viaje.all()));
+        listView.setOnItemClickListener(this);
 
-        buttonRutas.setBackgroundColor(getResources().getColor(R.color.green_favorite_on));
-        buttonParaderos.setBackgroundColor(getResources().getColor(R.color.green_favorite_off));
+        viajes = Viaje.all();
+        update();
+
+    }
+
+    public void update()
+    {
+        if(viajes != null)
+        {
+
+            listView.setAdapter(new FavoritosRutaAdapter(this, viajes));
+            buttonRutas.setBackgroundColor(getResources().getColor(R.color.green_favorite_on));
+            buttonParaderos.setBackgroundColor(getResources().getColor(R.color.green_favorite_off));
+        }
+        else if(paraderos != null)
+        {
+            paraderos = Paradero.all();
+
+
+            listView.setAdapter(new FavoritosParaderoAdapter(this, paraderos));
+            buttonParaderos.setBackgroundColor(getResources().getColor(R.color.green_favorite_on));
+            buttonRutas.setBackgroundColor(getResources().getColor(R.color.green_favorite_off));
+        }
     }
 
     public void onClick(View view)
@@ -47,22 +73,40 @@ public class FavoritosActivity extends BaseActivity {
         if(view.getId() == R.id.favoritos_btn_rutas)
         {
 
-            FavoritosRutaAdapter adapter = new FavoritosRutaAdapter(this, Viaje.all());
-            listView.setAdapter(adapter);
+            viajes = Viaje.all();
+            paraderos = null;
+            update();
 
-            buttonRutas.setBackgroundColor(getResources().getColor(R.color.green_favorite_on));
-            buttonParaderos.setBackgroundColor(getResources().getColor(R.color.green_favorite_off));
         }
         else if(view.getId() == R.id.favoritos_btn_paraderos)
         {
 
-            FavoritosParaderoAdapter adapter = new FavoritosParaderoAdapter(this, Paradero.all());
-            listView.setAdapter(adapter);
-
-            buttonParaderos.setBackgroundColor(getResources().getColor(R.color.green_favorite_on));
-            buttonRutas.setBackgroundColor(getResources().getColor(R.color.green_favorite_off));
+            paraderos = Paradero.all();
+            viajes = null;
+            update();
 
         }
     }
 
+
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if(null != paraderos)
+        {
+            Paradero paradero = paraderos[position];
+
+            Intent intent = new Intent(this, RecorridosParaderoActivity.class);
+            intent.putExtra(Config.BUNDLE_PARADERO, paradero);
+
+            startActivityForResult(intent, Config.ACTIVITY_PLANIFICADOR_TRAMO);
+        }
+    }
+
+    public void onResume()
+    {
+        super.onResume();
+
+
+    }
 }
