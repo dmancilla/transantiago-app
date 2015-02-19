@@ -1,0 +1,87 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+
+    tools:context="cl.magnesia.itransantiago.PuntosBIPActivity"
+    tools:ignore="MissingPrefix" >
+
+    <include android:id="@+id/header" layout="@layout/header" />
+
+    <fragment
+        android:id="@+id/puntos_bip_mapa"
+        class="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="fill_parent"
+        android:layout_below="@id/header"
+        android:layout_height="fill_parent" />
+
+    <LinearLayout
+        android:layout_alignParentBottom="true"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:paddingBottom="4dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="4dp">
+
+        <TextView
+            android:id="@+id/puntos_bip_entidad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Servipag"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            />
+
+        <TextView
+            android:id="@+id/puntos_bip_direccion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="AV. DIEZ DE JULIO 1625"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            />
+
+        <TextView
+            android:id="@+id/puntos_bip_comuna"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="SANTIAGO"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            />
+
+        <TextView
+            android:id="@+id/puntos_bip_horario"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Abierto: Lun a Vie: 11:00 a 15:00 / 16:00 a 20:00"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            />
+
+        <Button
+            android:id="@+id/puntos_bip_como_llegar"
+            android:background="@android:color/transparent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginTop="20dp"
+            android:text="¿Cómo llegar?"
+            android:onClick="onClick"
+
+            android:textColor="@color/marker_blue"
+            android:textSize="14sp"
+            />
+
+
+    </LinearLayout>
+
+</RelativeLayout>
