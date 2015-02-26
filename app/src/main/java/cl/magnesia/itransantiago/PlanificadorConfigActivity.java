@@ -133,7 +133,7 @@ public class PlanificadorConfigActivity extends BaseActivity implements View.OnF
         } else if(view.getId() == R.id.planificador_destino_gps) {
 
             textDestino.setText("Ubicación actual");
-            if(destinoGPS)
+            if(origenGPS)
             {
                 origenGPS = false;
                 textOrigen.setText("");

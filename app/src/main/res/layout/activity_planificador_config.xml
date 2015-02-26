@@ -92,6 +92,7 @@
                     android:id="@+id/planificador_destino_gps"
                     android:layout_width="30dp"
                     android:layout_height="40dp"
+                    android:onClick="onClick"
                     android:layout_alignRight="@id/planificador_destino"
                     android:layout_alignTop="@id/planificador_destino"
                     android:background="@drawable/btn_ubicacion" />
