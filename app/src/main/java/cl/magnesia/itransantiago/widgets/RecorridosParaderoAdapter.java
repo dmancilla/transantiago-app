@@ -45,6 +45,10 @@ public class RecorridosParaderoAdapter extends ArrayAdapter<JSONObject> {
             if(item.isNull("distanciabus1"))
             {
                 row = inflater.inflate(R.layout.row_paradero_fuera_servicio, parent, false);
+
+                String servicio = item.getString("servicio");
+                TextView textViewServicio = (TextView) row.findViewById(R.id.recorridos_paradero_servicio);
+                textViewServicio.setText(servicio);
             }
             else {
 
