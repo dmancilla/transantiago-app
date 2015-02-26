@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.TabHost;
@@ -17,6 +18,7 @@ import com.orm.Database;
 import java.util.Iterator;
 import java.util.List;
 
+import cl.magnesia.itransantiago.misc.MyLocationListener;
 import cl.magnesia.itransantiago.models.Paradero;
 
 public class HomeActivity extends TabActivity {
@@ -28,7 +30,7 @@ public class HomeActivity extends TabActivity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 
 		setContentView(R.layout.activity_home);
-		TabHost tabHost = getTabHost();
+		final TabHost tabHost = getTabHost();
 
 		TabSpec planificador = tabHost.newTabSpec("Planificador");
 		planificador.setIndicator("",
@@ -57,7 +59,7 @@ public class HomeActivity extends TabActivity {
 		TabSpec puntosBIP = tabHost.newTabSpec("Puntos BIP");
 		puntosBIP.setIndicator("",
 				getResources().getDrawable(R.drawable.tab_bip));
-		Intent puntosBIPIntent = new Intent(this, AcercaActivity.class);
+		Intent puntosBIPIntent = new Intent(this, PuntosBIPActivity.class);
 		puntosBIP.setContent(puntosBIPIntent);
 
 		// Adding all TabSpec to TabHost
@@ -68,15 +70,38 @@ public class HomeActivity extends TabActivity {
 		tabHost.addTab(puntosBIP);
 
 		// setup view
-		TabWidget tabWidget = (TabWidget) tabHost
+        final TabWidget tabWidget = (TabWidget) tabHost
 				.findViewById(android.R.id.tabs);
 		for (int i = 0; i < tabWidget.getChildCount(); i++) {
 			View tabView = tabWidget.getChildTabViewAt(i);
-			TextView textView = (TextView) tabView
+            tabView.setId(i);
+            tabView.setBackgroundColor(getResources().getColor(R.color.green_tab_off));
+            TextView textView = (TextView) tabView
 					.findViewById(android.R.id.title);
 			textView.setTextSize(6);
 			textView.setPadding(0, 0, 0, 0);
+
 		}
 
+        tabHost.getCurrentTabView().setBackgroundColor(getResources().getColor(R.color.green_tab_on));
+
+        tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+            @Override
+            public void onTabChanged(String tabID) {
+
+
+                for (int i = 0; i < tabWidget.getChildCount(); i++) {
+                    tabWidget.getChildTabViewAt(i).setBackgroundColor(getResources().getColor(R.color.green_tab_off));
+                }
+                tabHost.getCurrentTabView().setBackgroundColor(getResources().getColor(R.color.green_tab_on));
+            }
+        });
+
+        // setup GPS
+        MyLocationListener.init(getApplicationContext());
+
+
 	}
+
+
 }

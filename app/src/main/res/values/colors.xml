@@ -13,6 +13,11 @@
     <item name="green_favorite_on" type="color">#FF0AD278</item>
     <item name="green_favorite_off" type="color">#FF079354</item>
 
+    <item name="green_tab_on" type="color">#FF01DB80</item>
+    <item name="green_tab_off" type="color">#FF27C287</item>
+
+
+
 
     <item name="green_background" type="color">#FF08D379</item>
     <item name="green_80" type="color">#CC023924</item>
@@ -24,6 +29,5 @@
     <item name="marker_blue" type="color">#FF336AE3</item>
 
     <item name="transparent" type="color">#00000000</item>
-
 
 </resources>
