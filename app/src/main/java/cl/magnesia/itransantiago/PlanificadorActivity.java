@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import cl.magnesia.itransantiago.misc.MyLocationListener;
 import cl.magnesia.itransantiago.misc.SessionManager;
 import cl.magnesia.itransantiago.models.Tramo;
 import cl.magnesia.itransantiago.models.Viaje;
@@ -53,11 +54,9 @@ import android.widget.Toast;
 
 import static cl.magnesia.itransantiago.Config.TAG;
 
-public class PlanificadorActivity extends FragmentActivity implements
-        LocationListener, GoogleMap.OnMyLocationChangeListener, GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMapLoadedCallback {
+public class PlanificadorActivity extends BaseFragmentActivity implements
+        GoogleMap.OnMyLocationChangeListener, GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMapLoadedCallback {
 
-    private static final long MIN_TIME = 400;
-    private static final float MIN_DISTANCE = 1000;
     private static final int colorWalk = Color.rgb(0, 172, 235);
     private static final int colorBus = Color.rgb(116, 176, 19);
     private static final int colorSubway = Color.rgb(227, 0, 0);
@@ -67,8 +66,6 @@ public class PlanificadorActivity extends FragmentActivity implements
     private Button buttonFavorito;
     private TextView textViewDuracion;
     private TextView textViewBadge;
-    private LocationManager locationManager;
-    private LatLng lastKnowLatLng;
 
     // estado
     private Viaje viaje;
@@ -82,16 +79,11 @@ public class PlanificadorActivity extends FragmentActivity implements
 
     private Map<String, Tramo> tramos = new HashMap<String, Tramo>();
 
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //CalligraphyConfig.initDefault("fonts/TSInfReg.otf", R.attr.fontPath);
 
         setContentView(R.layout.activity_planificador);
 
@@ -128,10 +120,6 @@ public class PlanificadorActivity extends FragmentActivity implements
         map.setOnInfoWindowClickListener(this);
         map.setOnMapLoadedCallback(this);
 
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(
-                LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
-
         layoutResultados = (RelativeLayout) findViewById(R.id.planificador_resultados);
         layoutResultados.setVisibility(View.GONE);
 
@@ -139,21 +127,70 @@ public class PlanificadorActivity extends FragmentActivity implements
         textViewDuracion = (TextView) findViewById(R.id.planificador_resultados_duracion);
         textViewBadge = (TextView) findViewById(R.id.planificador_text_view_mas_rutas);
 
+        // chequea si viene de otra actividad
+
+        if(SessionManager.getInstance().to != null)
+        {
+
+            view.findViewById(R.id.header_btn_buscar).setVisibility(View.GONE);
+            view.findViewById(R.id.header_btn_back).setVisibility(View.VISIBLE);
+
+            // iniciar una búsqueda
+            LatLng to = SessionManager.getInstance().to;
+
+            Log.d("iTransantiago", "from => " + MyLocationListener.getInstance().lastKnowLatLng);
+            Log.d("iTransantiago", "to => " + to.latitude);
+
+            RequestQueue queue = Volley.newRequestQueue(this);
+
+            String url = String
+                    .format("http://itransantiago.modernizacion.gob.cl:8080/opentripplanner-api-webapp/ws/plan?fromPlace=%f,%f&toPlace=%f,%f&maxWalkDistance=1600",
+                            MyLocationListener.getInstance().lastKnowLatLng.latitude, MyLocationListener.getInstance().lastKnowLatLng.longitude, to.latitude, to.longitude);
+
+            Log.d("iTransantiago", url);
+
+            final ProgressDialog dialog = ProgressDialog.show(this,
+                    "iTransantiago", "Cargando");
+
+            // Request a string response from the provided URL.
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,
+                    url, null, new Response.Listener<JSONObject>() {
+
+                @Override
+                public void onResponse(JSONObject response) {
+
+                    dialog.dismiss();
+
+                    handleRespose(response);
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.d("iTransantiago", error.getMessage());
+                }
+            });
+            // Add the request to the RequestQueue.
+            queue.add(request);
+
+
+            // limpia la sesión
+            SessionManager.getInstance().to = null;
+
+        }
     }
 
     public void onClick(View view) {
         Log.d("iTransantiago", "click");
-        if (view.getId() == R.id.header_btn_buscar) // TODO: check button
+        if (view.getId() == R.id.header_btn_buscar)
         {
             Intent intent = new Intent(this, PlanificadorConfigActivity.class);
-
-            double lat = map.getMyLocation().getLatitude();
-            double lng = map.getMyLocation().getLongitude();
-
-            intent.putExtra("LATITUDE", lat);
-            intent.putExtra("LONGITUDE", lng);
-
             startActivityForResult(intent, Config.ACTIVITY_PLANIFICADOR_CONFIG);
+
+        }
+        else if (view.getId() == R.id.header_btn_back)
+        {
+            finish();
 
         }
         else if(view.getId() == R.id.planificador_btn_mas_rutas)
@@ -292,13 +329,13 @@ public class PlanificadorActivity extends FragmentActivity implements
                         .getDrawable(R.drawable.icono_destino))
                         .getBitmap());
 
-        map.addMarker(new MarkerOptions()
+        map.addMarker(new MarkerOptions().title("Origen")
                 .position(
                         new LatLng(from.getDouble("lat"), from
                                 .getDouble("lon"))).icon(
                         bitmapDescriptorFrom));
 
-        map.addMarker(new MarkerOptions().position(
+        map.addMarker(new MarkerOptions().title("Destino").position(
                 new LatLng(to.getDouble("lat"), to.getDouble("lon")))
                 .icon(bitmapDescriptorTo));
 
@@ -319,7 +356,7 @@ public class PlanificadorActivity extends FragmentActivity implements
             float v = 0.0f;
             if (mode.equals("WALK")) {
                 title = "Caminar";
-                snippet = String.format("Camine hasta %s", leg.getJSONObject("from").getString("name"));
+                snippet = Utils.toUTF8(String.format("Camine hasta %s", leg.getJSONObject("from").getString("name")));
                 color = colorWalk;
                 bitmapDescriptor = bitmapDescriptorWalk;
                 u = 1.0f;
@@ -333,8 +370,8 @@ public class PlanificadorActivity extends FragmentActivity implements
                 u = 0.0f;
                 v = 1.0f;
             } else if (mode.equals("SUBWAY")) {
-                title = String.format(new String(leg.getString("route").getBytes("ISO-8859-1")), "UTF-8");
-                snippet = String.format("Metro %s", new String(leg.getString("route").getBytes("ISO-8859-1")), "UTF-8");
+                title = Utils.toUTF8(String.format(leg.getString("route")));
+                snippet = Utils.toUTF8(String.format("Metro %s", leg.getString("route")));
                 color = colorSubway;
                 bitmapDescriptor = bitmapDescriptorSubway;
                 u = 0.0f;
@@ -413,39 +450,8 @@ public class PlanificadorActivity extends FragmentActivity implements
     }
 
     @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        LatLng latLng = new LatLng(location.getLatitude(),
-                location.getLongitude());
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng,
-                15);
-        map.animateCamera(cameraUpdate);
-        locationManager.removeUpdates(this);
-
-        lastKnowLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-
-    }
-
-    @Override
     public void onMyLocationChange(Location location) {
-        lastKnowLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+        // lastKnowLatLng = new LatLng(location.getLatitude(), location.getLongitude());
     }
 
     @Override
@@ -458,58 +464,6 @@ public class PlanificadorActivity extends FragmentActivity implements
 
         startActivityForResult(intent, Config.ACTIVITY_PLANIFICADOR_TRAMO);
 
-    }
-
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-
-        if(SessionManager.getInstance().to != null)
-        {
-            // iniciar una búsqueda
-            LatLng to = SessionManager.getInstance().to;
-
-            Log.d("iTransantiago", "from => " + lastKnowLatLng);
-            Log.d("iTransantiago", "to => " + to.latitude);
-
-            RequestQueue queue = Volley.newRequestQueue(this);
-
-            String url = String
-                    .format("http://itransantiago.modernizacion.gob.cl:8080/opentripplanner-api-webapp/ws/plan?fromPlace=%f,%f&toPlace=%f,%f&maxWalkDistance=1600",
-                            lastKnowLatLng.latitude, lastKnowLatLng.longitude, to.latitude, to.longitude);
-
-            Log.d("iTransantiago", url);
-
-            final ProgressDialog dialog = ProgressDialog.show(this,
-                    "iTransantiago", "Cargando");
-
-            // Request a string response from the provided URL.
-            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,
-                    url, null, new Response.Listener<JSONObject>() {
-
-                @Override
-                public void onResponse(JSONObject response) {
-
-                    dialog.dismiss();
-
-                    handleRespose(response);
-
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.d("iTransantiago", error.getMessage());
-                }
-            });
-            // Add the request to the RequestQueue.
-            queue.add(request);
-
-
-            // limpia la sesión
-            SessionManager.getInstance().to = null;
-
-        }
     }
 
 
