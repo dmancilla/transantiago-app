@@ -38,6 +38,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -51,23 +52,23 @@ import static cl.magnesia.itransantiago.Config.TAG;
 public class ParaderosActivity extends BaseFragmentActivity implements GoogleMap.OnMapLoadedCallback, GoogleMap.InfoWindowAdapter, GoogleMap.OnInfoWindowClickListener {
 
     // UI
-	private GoogleMap map;
+    private GoogleMap map;
     private ProgressDialog dialog;
 
     // data
-	private List<Paradero> paraderos;
+    private List<Paradero> paraderos;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_paraderos);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_paraderos);
 
         TextView textView = (TextView)findViewById(R.id.header_titulo);
         textView.setText("Paraderos");
 
-		SupportMapFragment fragment = (SupportMapFragment) getSupportFragmentManager()
-				.findFragmentById(R.id.paraderos_mapa2);
-		map = fragment.getExtendedMap();
+        SupportMapFragment fragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.paraderos_mapa2);
+        map = fragment.getExtendedMap();
         map.getUiSettings().setRotateGesturesEnabled(false);
         map.setOnMapLoadedCallback(this);
         map.setClustering(new ClusteringSettings().clusterOptionsProvider(new MyClusterOptionsProvider(this, R.color.green_background)).enabled(true).addMarkersDynamically(true));
@@ -82,7 +83,7 @@ public class ParaderosActivity extends BaseFragmentActivity implements GoogleMap
 
         loadParaderosBackground();
 
-	}
+    }
 
     private void loadParaderosBackground()
     {
@@ -112,22 +113,36 @@ public class ParaderosActivity extends BaseFragmentActivity implements GoogleMap
     public void addMarkers()
     {
 
+
+
         runOnUiThread(new Runnable()
         {
 
             @Override
             public void run() {
+
+                float[] results = new float[4];
+
                 BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.icono_paradero);
 
                 for (Paradero paradero : paraderos) {
 
-                    Marker marker = map.addMarker(new MarkerOptions().title(paradero.name).snippet(paradero.code).position(paradero.latLng).icon(icon));
+                    Location.distanceBetween(Config.latLngStgo.latitude, Config.latLngStgo.longitude, paradero.latLng.latitude, paradero.latLng.longitude, results);
+                    float distance = results[0];
+
+                    if(distance > Config.MAX_DISTANCE)
+                        continue;
+
+                    Marker marker = map.addMarker(new MarkerOptions().title(getResources().getString(R.string.paraderos_titulo)).snippet(paradero.name).position(paradero.latLng).icon(icon));
                     marker.setData(paradero);
                 }
 
                 dialog.dismiss();
+
             }
         });
+
+
     }
 
     @Override
