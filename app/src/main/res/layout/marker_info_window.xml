@@ -5,26 +5,36 @@
     android:background="@color/white"
     >
 
-    <TextView
-        android:id="@+id/marker_titulo"
+
+    <LinearLayout
+        android:id="@+id/marker_wrapper"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="4dp"
-        android:text="titulo"
-        android:textColor="@color/black"
-        android:textSize="12sp" />
+        android:orientation="vertical"
+        >
 
-    <TextView
-        android:id="@+id/marker_descripcion"
-        android:layout_width="wrap_content"
-        android:layout_height="18dp"
-        android:layout_below="@id/marker_titulo"
-        android:layout_marginBottom="4dp"
-        android:layout_marginLeft="10dp"
-        android:text="descripcion"
-        android:textColor="@color/black"
-        android:textSize="10sp" />
+        <TextView
+            android:id="@+id/marker_titulo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="4dp"
+            android:text="titulo"
+            android:textColor="@color/black"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/marker_descripcion"
+            android:layout_width="wrap_content"
+            android:layout_height="18dp"
+            android:layout_below="@id/marker_titulo"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="10dp"
+            android:text="descripcion"
+            android:textColor="@color/black"
+            android:textSize="10sp" />
+
+        </LinearLayout>
 
     <Button
         android:id="@+id/marker_btn_disclosure"
@@ -34,7 +44,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="14dp"
-        android:layout_toRightOf="@id/marker_descripcion"
+        android:layout_toRightOf="@id/marker_wrapper"
         android:background="@drawable/btn_disclosure"
         android:textColor="@color/marker_blue"
         android:textSize="12sp" />
@@ -48,7 +58,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="14dp"
-        android:layout_toRightOf="@id/marker_descripcion"
+        android:layout_toRightOf="@id/marker_wrapper"
         android:background="@drawable/info_window_bg"
         android:text="i"
         android:textColor="@color/marker_blue"

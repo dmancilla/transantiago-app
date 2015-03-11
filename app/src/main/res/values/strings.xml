@@ -22,6 +22,8 @@
     <string name="title_activity_recorridos_paradero">RecorridosParadero</string>
     <string name="title_activity_favoritos">FavoritosActivity</string>
 
+    <string name="paraderos_titulo">Paradero de Bus</string>
+
     <string name="paraderos_busqueda">Ingrese el código del paradero</string>
     <string name="paraderos_busqueda_placeholder">Ej: PC396</string>
 
