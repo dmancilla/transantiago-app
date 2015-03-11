@@ -26,7 +26,7 @@
         android:glEsVersion="0x00020000"
         android:required="true" />
 
-    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:name="com.orm.SugarApp"
@@ -59,7 +59,7 @@
             android:value="AIzaSyBjWfj2ahPPxw04yW4WjSpny0_QQG8WrJk" />
 
         <activity
-            android:name=".MainActivity"
+            android:name="cl.gob.modernizacion.itransantiago.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -69,61 +69,61 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ParaderosActivity"
+            android:name="cl.gob.modernizacion.itransantiago.ParaderosActivity"
             android:label="@string/title_activity_paraderos"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".ParaderosBusquedaActivity"
+            android:name="cl.gob.modernizacion.itransantiago.ParaderosBusquedaActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".PuntosBIPActivity"
+            android:name="cl.gob.modernizacion.itransantiago.PuntosBIPActivity"
             android:label="PuntosBIPActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".PuntosBIPDetalleActivity"
+            android:name="cl.gob.modernizacion.itransantiago.PuntosBIPDetalleActivity"
             android:label="PuntosBIPDetalleActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".HomeActivity"
+            android:name="cl.gob.modernizacion.itransantiago.HomeActivity"
             android:label="@string/title_activity_home"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".PlanificadorActivity"
+            android:name="cl.gob.modernizacion.itransantiago.PlanificadorActivity"
             android:label="@string/title_activity_planificador"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".PlanificadorConfigActivity"
+            android:name="cl.gob.modernizacion.itransantiago.PlanificadorConfigActivity"
             android:label="@string/title_activity_planificador_config"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".PlanificadorItinerariosActivity"
+            android:name="cl.gob.modernizacion.itransantiago.PlanificadorItinerariosActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".RecorridosActivity"
+            android:name="cl.gob.modernizacion.itransantiago.RecorridosActivity"
             android:label="@string/title_activity_recorridos" >
         </activity>
         <activity
-            android:name=".RecorridosResultadoActivity"
+            android:name="cl.gob.modernizacion.itransantiago.RecorridosResultadoActivity"
             android:label="@string/title_activity_recorridos_resultado" >
         </activity>
         <activity
-            android:name=".PlanificadorTramoActivity"
+            android:name="cl.gob.modernizacion.itransantiago.PlanificadorTramoActivity"
             android:label="@string/title_activity_planificador_tramo" >
         </activity>
         <activity
-            android:name=".RecorridosParaderoActivity"
+            android:name="cl.gob.modernizacion.itransantiago.RecorridosParaderoActivity"
             android:label="@string/title_activity_recorridos_paradero" >
         </activity>
         <activity
-            android:name=".FavoritosActivity"
+            android:name="cl.gob.modernizacion.itransantiago.FavoritosActivity"
             android:label="@string/title_activity_favoritos" >
         </activity>
     </application>
