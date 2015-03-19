@@ -97,6 +97,8 @@ public class PlanificadorTramoActivity extends BaseActivity {
             textView.setText("Ver buses cercanos");
         }
 
+        Utils.trackScreen(this, "planificador-tramo");
+
     }
 
     public void onClick(View view)

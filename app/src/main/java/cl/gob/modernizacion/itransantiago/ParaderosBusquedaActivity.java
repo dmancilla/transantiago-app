@@ -28,6 +28,8 @@ public class ParaderosBusquedaActivity extends BaseActivity {
 
 
         textParadero = (TextView) findViewById(R.id.paraderos_codigo);
+
+        trackScreen("paradero-busqueda");
     }
 
     public void onClick(View view) {

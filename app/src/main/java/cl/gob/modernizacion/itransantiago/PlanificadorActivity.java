@@ -21,9 +21,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
+import com.androidmapsextensions.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -45,22 +49,26 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import cl.magnesia.itransantiago.R;o
+import cl.magnesia.itransantiago.R;
 
 import static cl.gob.modernizacion.itransantiago.Config.TAG;
 
 public class PlanificadorActivity extends BaseFragmentActivity implements
-        GoogleMap.OnMyLocationChangeListener, GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMapLoadedCallback {
+        GoogleMap.OnMyLocationChangeListener, GoogleMap.OnInfoWindowClickListener {
 
     private static final int colorWalk = Color.rgb(0, 172, 235);
     private static final int colorBus = Color.rgb(116, 176, 19);
     private static final int colorSubway = Color.rgb(227, 0, 0);
+
+    private SupportMapFragment mapFragment;
     private GoogleMap map;
     private RelativeLayout layoutResultados;
 
     private Button buttonFavorito;
     private TextView textViewDuracion;
     private TextView textViewBadge;
+
+    private Button buttonMyLocation;
 
     // estado
     private Viaje viaje;
@@ -74,7 +82,7 @@ public class PlanificadorActivity extends BaseFragmentActivity implements
 
     private Map<String, Tramo> tramos = new HashMap<String, Tramo>();
 
-
+    private boolean myLocationEnabled = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,12 +95,12 @@ public class PlanificadorActivity extends BaseFragmentActivity implements
         Button button = (Button) view.findViewById(R.id.header_btn_buscar);
         button.setVisibility(View.VISIBLE);
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.planificador_mapa);
+
         map = mapFragment.getMap();
         map.getUiSettings().setRotateGesturesEnabled(false);
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        map.setMyLocationEnabled(true);
         map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
             @Override
             public View getInfoWindow(Marker marker) {
@@ -113,7 +121,8 @@ public class PlanificadorActivity extends BaseFragmentActivity implements
             }
         });
         map.setOnInfoWindowClickListener(this);
-        map.setOnMapLoadedCallback(this);
+
+
 
         layoutResultados = (RelativeLayout) findViewById(R.id.planificador_resultados);
         layoutResultados.setVisibility(View.GONE);
@@ -121,6 +130,8 @@ public class PlanificadorActivity extends BaseFragmentActivity implements
         buttonFavorito = (Button) findViewById(R.id.planificador_resultados_guardar);
         textViewDuracion = (TextView) findViewById(R.id.planificador_resultados_duracion);
         textViewBadge = (TextView) findViewById(R.id.planificador_text_view_mas_rutas);
+
+        buttonMyLocation = (Button) findViewById(R.id.mapa_my_location);
 
         // chequea si viene de otra actividad
 
@@ -173,6 +184,8 @@ public class PlanificadorActivity extends BaseFragmentActivity implements
             SessionManager.getInstance().to = null;
 
         }
+
+        Utils.trackScreen(this, "planificador");
     }
 
     public void onClick(View view) {
@@ -182,10 +195,14 @@ public class PlanificadorActivity extends BaseFragmentActivity implements
             Intent intent = new Intent(this, PlanificadorConfigActivity.class);
             startActivityForResult(intent, Config.ACTIVITY_PLANIFICADOR_CONFIG);
 
+            Utils.trackEvent(this, "button-click", "planificador", "search");
+
         }
         else if (view.getId() == R.id.header_btn_back)
         {
             finish();
+
+            Utils.trackEvent(this, "button-click", "planificador", "back");
 
         }
         else if(view.getId() == R.id.planificador_btn_mas_rutas)
@@ -198,6 +215,8 @@ public class PlanificadorActivity extends BaseFragmentActivity implements
         else if(view.getId() == R.id.planificador_resultados_guardar)
         {
 
+
+
             if(null == viaje)
             {
                 // crea un favorito
@@ -206,6 +225,8 @@ public class PlanificadorActivity extends BaseFragmentActivity implements
 
                 Toast.makeText(this, "Favorito guardado", Toast.LENGTH_SHORT).show();
                 buttonFavorito.setBackgroundResource(R.drawable.btn_desguardar_ruta);
+
+                Utils.trackEvent(this, "button-click", "planificador", "save-favorite");
 
 
             }
@@ -217,11 +238,30 @@ public class PlanificadorActivity extends BaseFragmentActivity implements
 
                 Toast.makeText(this, "Favorito eliminado", Toast.LENGTH_SHORT).show();
                 buttonFavorito.setBackgroundResource(R.drawable.btn_guardar_ruta);
+
+                Utils.trackEvent(this, "button-click", "planificador", "remove-favorite");
             }
+        }
+        else if( view.getId() == R.id.mapa_my_location )
+        {
+            myLocationEnabled = !myLocationEnabled;
 
+            map.setMyLocationEnabled(myLocationEnabled);
+            if(myLocationEnabled)
+            {
+                buttonMyLocation.setBackgroundResource(R.drawable.locate_on);
 
+                CameraUpdate center=
+                        CameraUpdateFactory.newLatLng(MyLocationListener.getInstance().lastKnowLatLng);
+                CameraUpdate zoom=CameraUpdateFactory.zoomTo(15);
 
-
+                map.moveCamera(center);
+                map.animateCamera(zoom);
+            }
+            else
+            {
+                buttonMyLocation.setBackgroundResource(R.drawable.locate);
+            }
         }
     }
 
@@ -496,8 +536,4 @@ public class PlanificadorActivity extends BaseFragmentActivity implements
 
     }
 
-    @Override
-    public void onMapLoaded() {
-        map.moveCamera(CameraUpdateFactory.newLatLngBounds(Config.latLngBoundsStgo, 0));
-    }
 }

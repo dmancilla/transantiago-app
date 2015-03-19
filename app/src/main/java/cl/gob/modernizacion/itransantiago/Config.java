@@ -30,6 +30,10 @@ public class Config {
     public static LatLng lowerLeft = new LatLng(-33.543535, -70.801164);
     public static LatLng upperRight = new LatLng(-33.348736, -70.514833);
 
-    public static final String URL_PREDICCION = "https://www.maxsystems.cl/webservices/dondeestalamicro2/getpredicciones.php?token=fn03f3q2nf32qf";
+    public static final String URL_PREDICCION = "";
+
+    public static final String TRACKER_ID = "UA-23675324-26";
+    public static final int TRACKER_TIMEOUT = 300;
+
 
 }

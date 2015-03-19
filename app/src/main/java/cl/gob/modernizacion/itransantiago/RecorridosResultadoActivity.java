@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -27,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cl.gob.modernizacion.itransantiago.misc.MyLocationListener;
 import cl.magnesia.itransantiago.R;
 import cl.gob.modernizacion.itransantiago.db.MyDatabase;
 import cl.gob.modernizacion.itransantiago.models.Paradero;
@@ -42,6 +44,8 @@ public class RecorridosResultadoActivity extends BaseFragmentActivity implements
     private LinearLayout layoutDireccion;
     private TextView textDireccion;
 
+    private Button buttonMyLocation;
+
     // estado
     private Ruta ruta;
     private Trip trip;
@@ -51,6 +55,7 @@ public class RecorridosResultadoActivity extends BaseFragmentActivity implements
     private String servicio;
     private int direccion = 0;
     private Map<String, Paradero> paraderosMap = new HashMap<String, Paradero>();
+    private boolean myLocationEnabled = false;
 
     // UI
     private ProgressDialog dialog;
@@ -91,10 +96,10 @@ public class RecorridosResultadoActivity extends BaseFragmentActivity implements
         map.getUiSettings().setRotateGesturesEnabled(false);
         map.setOnMapLoadedCallback(this);
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        map.setMyLocationEnabled(true);
         map.setInfoWindowAdapter(this);
         map.setOnInfoWindowClickListener(this);
 
+        buttonMyLocation = (Button) findViewById(R.id.mapa_my_location);
 
         // check zoom
         handler = new Handler();
@@ -126,6 +131,8 @@ public class RecorridosResultadoActivity extends BaseFragmentActivity implements
 
         overridePendingTransition(R.animator.activity_from_right, R.animator.activity_close_scale);
 
+        Utils.trackScreen(this, "recorridos-resultado");
+
     }
 
     public void onResume()
@@ -147,6 +154,27 @@ public class RecorridosResultadoActivity extends BaseFragmentActivity implements
         {
             direccion = 1 - direccion;
             displayRecorrido();
+        }
+        else if( view.getId() == R.id.mapa_my_location )
+        {
+            myLocationEnabled = !myLocationEnabled;
+
+            map.setMyLocationEnabled(myLocationEnabled);
+            if(myLocationEnabled)
+            {
+                buttonMyLocation.setBackgroundResource(R.drawable.locate_on);
+
+                CameraUpdate center=
+                        CameraUpdateFactory.newLatLng(MyLocationListener.getInstance().lastKnowLatLng);
+                CameraUpdate zoom=CameraUpdateFactory.zoomTo(15);
+
+                map.moveCamera(center);
+                map.animateCamera(zoom);
+            }
+            else
+            {
+                buttonMyLocation.setBackgroundResource(R.drawable.locate);
+            }
         }
     }
 

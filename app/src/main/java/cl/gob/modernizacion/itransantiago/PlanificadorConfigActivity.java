@@ -71,6 +71,8 @@ public class PlanificadorConfigActivity extends BaseActivity implements View.OnF
 		textOrigen = (EditText) findViewById(R.id.planificador_origen);
 		textDestino = (EditText) findViewById(R.id.planificador_destino);
 
+        Utils.trackScreen(this, "planificador-config");
+
     }
 
 	public void onClick(View view) {

@@ -152,6 +152,8 @@ public class RecorridosParaderoActivity extends BaseActivity {
         });
         // Add the request to the RequestQueue.
         queue.add(request);
+
+        Utils.trackScreen(this, "recorridos-paradero");
     }
 
     public void onClick(View view)

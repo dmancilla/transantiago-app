@@ -66,6 +66,8 @@ public class PlanificadorItinerariosActivity extends BaseActivity implements Ada
             e.printStackTrace();
         }
 
+        Utils.trackScreen(this, "planificador-itinerarios");
+
 	}
 
 	public void onClick(View view) {

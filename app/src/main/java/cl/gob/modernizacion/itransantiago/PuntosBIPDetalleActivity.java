@@ -69,6 +69,8 @@ public class PuntosBIPDetalleActivity extends BaseFragmentActivity {
         ((TextView)findViewById(R.id.puntos_bip_comuna)).setText(puntoBIP.comuna);
         ((TextView)findViewById(R.id.puntos_bip_horario)).setText(puntoBIP.horario);
 
+        Utils.trackScreen(this, "puntos bip!-detalle");
+
     }
 
     public void onClick(View view)

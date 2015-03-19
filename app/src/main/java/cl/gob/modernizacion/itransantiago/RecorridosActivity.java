@@ -26,6 +26,8 @@ public class RecorridosActivity extends BaseActivity {
 
 
         textServicio = (TextView) findViewById(R.id.recorridos_servicio);
+
+        Utils.trackScreen(this, "recorridos");
     }
 
     public void onClick(View view) {

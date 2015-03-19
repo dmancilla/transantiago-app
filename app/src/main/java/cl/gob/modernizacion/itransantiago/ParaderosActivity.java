@@ -2,6 +2,7 @@ package cl.gob.modernizacion.itransantiago;
 
 import java.util.List;
 
+import cl.gob.modernizacion.itransantiago.misc.MyLocationListener;
 import cl.magnesia.itransantiago.R;
 import cl.gob.modernizacion.itransantiago.db.MyDatabase;
 import cl.gob.modernizacion.itransantiago.misc.MyClusterOptionsProvider;
@@ -13,6 +14,7 @@ import com.androidmapsextensions.GoogleMap;
 import com.androidmapsextensions.Marker;
 import com.androidmapsextensions.MarkerOptions;
 import com.androidmapsextensions.SupportMapFragment;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -22,6 +24,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -32,8 +35,11 @@ public class ParaderosActivity extends BaseFragmentActivity implements GoogleMap
     private GoogleMap map;
     private ProgressDialog dialog;
 
+    private Button buttonMyLocation;
+
     // data
     private List<Paradero> paraderos;
+    private boolean myLocationEnabled = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,12 +51,15 @@ public class ParaderosActivity extends BaseFragmentActivity implements GoogleMap
 
         SupportMapFragment fragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.paraderos_mapa2);
+
         map = fragment.getExtendedMap();
         map.getUiSettings().setRotateGesturesEnabled(false);
         map.setOnMapLoadedCallback(this);
         map.setClustering(new ClusteringSettings().clusterOptionsProvider(new MyClusterOptionsProvider(this, R.color.green_background)).enabled(true).addMarkersDynamically(true));
         map.setInfoWindowAdapter(this);
         map.setOnInfoWindowClickListener(this);
+
+        buttonMyLocation = (Button) findViewById(R.id.mapa_my_location);
 
         // SETUP HEADER
         // header
@@ -59,6 +68,8 @@ public class ParaderosActivity extends BaseFragmentActivity implements GoogleMap
         button.setVisibility(View.VISIBLE);
 
         loadParaderosBackground();
+
+        Utils.trackScreen(this, "paraderos");
 
     }
 
@@ -124,7 +135,9 @@ public class ParaderosActivity extends BaseFragmentActivity implements GoogleMap
 
     @Override
     public void onMapLoaded() {
+
         map.moveCamera(CameraUpdateFactory.newLatLngBounds(Config.latLngBoundsStgo, 0));
+
     }
 
     public void onClick(View view)
@@ -133,6 +146,28 @@ public class ParaderosActivity extends BaseFragmentActivity implements GoogleMap
         {
             Intent intent = new Intent(this, ParaderosBusquedaActivity.class);
             startActivity(intent);
+        }
+
+        else if( view.getId() == R.id.mapa_my_location )
+        {
+            myLocationEnabled = !myLocationEnabled;
+
+            map.setMyLocationEnabled(myLocationEnabled);
+            if(myLocationEnabled)
+            {
+                buttonMyLocation.setBackgroundResource(R.drawable.locate_on);
+
+                CameraUpdate center=
+                        CameraUpdateFactory.newLatLng(MyLocationListener.getInstance().lastKnowLatLng);
+                CameraUpdate zoom=CameraUpdateFactory.zoomTo(15);
+
+                map.moveCamera(center);
+                map.animateCamera(zoom);
+            }
+            else
+            {
+                buttonMyLocation.setBackgroundResource(R.drawable.locate);
+            }
         }
     }
 

@@ -52,6 +52,8 @@ public class FavoritosActivity extends BaseActivity implements AdapterView.OnIte
         viajes = Viaje.all();
         update();
 
+        Utils.trackScreen(this, "favoritos");
+
     }
 
     public void update()

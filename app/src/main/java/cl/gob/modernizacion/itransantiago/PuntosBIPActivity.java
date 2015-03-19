@@ -5,6 +5,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.androidmapsextensions.ClusteringSettings;
@@ -12,6 +13,7 @@ import com.androidmapsextensions.GoogleMap;
 import com.androidmapsextensions.Marker;
 import com.androidmapsextensions.MarkerOptions;
 import com.androidmapsextensions.SupportMapFragment;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -20,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cl.gob.modernizacion.itransantiago.misc.MyLocationListener;
 import cl.magnesia.itransantiago.R;
 import cl.gob.modernizacion.itransantiago.db.MyDatabase;
 import cl.gob.modernizacion.itransantiago.misc.MyClusterOptionsProvider;
@@ -30,10 +33,12 @@ public class PuntosBIPActivity extends BaseFragmentActivity implements GoogleMap
 
     // UI
 	private GoogleMap map;
+    private Button buttonMyLocation;
 
     // ESTADO
 	private List<PuntoBIP> puntosBIP;
     private Map<String, PuntoBIP> markers = new HashMap<String, PuntoBIP>();
+    private boolean myLocationEnabled = false;
 
 
 	@Override
@@ -55,11 +60,15 @@ public class PuntosBIPActivity extends BaseFragmentActivity implements GoogleMap
         map.setInfoWindowAdapter(this);
         map.setOnInfoWindowClickListener(this);
 
+        buttonMyLocation = (Button) findViewById(R.id.mapa_my_location);
+
 		MyDatabase db = new MyDatabase(this);
 
 		puntosBIP = db.getPuntosBIP();
 
 		setUpClusterer();
+
+        Utils.trackScreen(this, "puntos bip!");
 
 	}
 
@@ -86,6 +95,31 @@ public class PuntosBIPActivity extends BaseFragmentActivity implements GoogleMap
 		}
 
 	}
+
+    public void onClick(View view)
+    {
+        if( view.getId() == R.id.mapa_my_location )
+        {
+            myLocationEnabled = !myLocationEnabled;
+
+            map.setMyLocationEnabled(myLocationEnabled);
+            if(myLocationEnabled)
+            {
+                buttonMyLocation.setBackgroundResource(R.drawable.locate_on);
+
+                CameraUpdate center=
+                        CameraUpdateFactory.newLatLng(MyLocationListener.getInstance().lastKnowLatLng);
+                CameraUpdate zoom=CameraUpdateFactory.zoomTo(15);
+
+                map.moveCamera(center);
+                map.animateCamera(zoom);
+            }
+            else
+            {
+                buttonMyLocation.setBackgroundResource(R.drawable.locate);
+            }
+        }
+    }
 
     @Override
     public View getInfoWindow(Marker marker) {

@@ -1,5 +1,6 @@
 package cl.gob.modernizacion.itransantiago;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -8,6 +9,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
@@ -141,6 +145,22 @@ public class Utils {
              exception.printStackTrace();
              return str;
          }
+    }
+
+    // tracks using Google Analytics
+    public static void trackScreen(Context context, String screenName) {
+        GoogleAnalytics analytics = GoogleAnalytics.getInstance(context);
+        Tracker tracker = analytics.newTracker(Config.TRACKER_ID);
+        tracker.setSessionTimeout(Config.TRACKER_TIMEOUT);
+        tracker.setScreenName("VIEW " + screenName);
+        tracker.send(new HitBuilders.AppViewBuilder().build());
+    }
+
+    public static void trackEvent(Context context, String category, String action, String label) {
+        GoogleAnalytics analytics = GoogleAnalytics.getInstance(context);
+        Tracker tracker = analytics.newTracker(Config.TRACKER_ID);
+        tracker.setSessionTimeout(Config.TRACKER_TIMEOUT);
+        tracker.send(new HitBuilders.EventBuilder().setCategory(category).setAction(action).setLabel(label).build());
     }
 
 }
