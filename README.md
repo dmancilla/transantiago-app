@@ -31,4 +31,5 @@ Esta base de datos se encuentra en el archivo `app/src/main/assets/databases/itr
 * trips
 
 La aplicación permite tener sólo un archivo de base de datos local a la vez. Esto quiere decir que cada cambio implica que la versión anterior sea reemplazada por la nueva versión.
+
 Cada cambio en esta base de datos deberá ser indicado a su vez en el archivo `cl.gob.modernizacion.itransantiago.db.MyDatabase` en la variable `DATABASE_VERSION`
