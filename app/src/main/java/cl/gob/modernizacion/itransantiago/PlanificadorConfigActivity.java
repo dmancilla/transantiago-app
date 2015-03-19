@@ -49,6 +49,8 @@ public class PlanificadorConfigActivity extends BaseActivity implements View.OnF
     private boolean origenGPS = false;
     private boolean destinoGPS = false;
 
+    private ProgressDialog dialog;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -164,8 +166,13 @@ public class PlanificadorConfigActivity extends BaseActivity implements View.OnF
 			// String origen = "Vergara 471";
 			// String destino = "Sim�n Bol�var 5000";
 
-			final ProgressDialog dialog = ProgressDialog.show(this,
-					"iTransantiago", "Cargando");
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    dialog = ProgressDialog.show(PlanificadorConfigActivity.this,
+                            "iTransantiago", "Cargando");
+                }
+            });
 
 			try {
 
