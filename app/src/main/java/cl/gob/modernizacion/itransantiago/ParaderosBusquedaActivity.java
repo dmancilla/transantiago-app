@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import cl.magnesia.itransantiago.R;
+import cl.gob.modernizacion.itransantiago.R;
 import cl.gob.modernizacion.itransantiago.db.MyDatabase;
 import cl.gob.modernizacion.itransantiago.models.Paradero;
 

@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 import cl.gob.modernizacion.itransantiago.misc.MyLocationListener;
-import cl.magnesia.itransantiago.R;
+import cl.gob.modernizacion.itransantiago.R;
 import cl.gob.modernizacion.itransantiago.db.MyDatabase;
 import cl.gob.modernizacion.itransantiago.models.Paradero;
 import cl.gob.modernizacion.itransantiago.models.Ruta;
@@ -132,6 +132,7 @@ public class RecorridosResultadoActivity extends BaseFragmentActivity implements
         overridePendingTransition(R.animator.activity_from_right, R.animator.activity_close_scale);
 
         Utils.trackScreen(this, "recorridos-resultado");
+        Utils.trackEvent(this, "VIEW", "recorridos", servicio);
 
     }
 

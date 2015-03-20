@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import cl.magnesia.itransantiago.R;
+import cl.gob.modernizacion.itransantiago.R;
 import cl.gob.modernizacion.itransantiago.models.Tramo;
 
 

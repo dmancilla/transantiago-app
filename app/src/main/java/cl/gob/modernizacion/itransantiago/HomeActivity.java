@@ -11,7 +11,7 @@ import android.widget.TabWidget;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
-import cl.magnesia.itransantiago.R;
+import cl.gob.modernizacion.itransantiago.R;
 import cl.gob.modernizacion.itransantiago.misc.MyLocationListener;
 
 public class HomeActivity extends TabActivity {

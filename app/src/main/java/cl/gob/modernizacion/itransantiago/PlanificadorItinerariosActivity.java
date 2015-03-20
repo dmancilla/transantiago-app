@@ -14,7 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import cl.magnesia.itransantiago.R;
+import cl.gob.modernizacion.itransantiago.R;
 import cl.gob.modernizacion.itransantiago.widgets.ItinerariosAdapter;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 

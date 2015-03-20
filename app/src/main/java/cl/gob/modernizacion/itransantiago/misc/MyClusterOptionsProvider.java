@@ -32,7 +32,7 @@ import com.google.maps.android.ui.SquareTextView;
 
 import java.util.List;
 
-import cl.magnesia.itransantiago.R;
+import cl.gob.modernizacion.itransantiago.R;
 
 public class MyClusterOptionsProvider implements ClusterOptionsProvider {
 

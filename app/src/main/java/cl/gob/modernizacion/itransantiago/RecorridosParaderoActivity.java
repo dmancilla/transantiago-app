@@ -2,6 +2,8 @@ package cl.gob.modernizacion.itransantiago;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -20,17 +22,19 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import cl.magnesia.itransantiago.R;
+import cl.gob.modernizacion.itransantiago.R;
 import cl.gob.modernizacion.itransantiago.models.Paradero;
 import cl.gob.modernizacion.itransantiago.widgets.RecorridosParaderoAdapter;
 
 
-public class RecorridosParaderoActivity extends BaseActivity {
+public class RecorridosParaderoActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     public Button btnFavorito;
     public ListView listView;
 
     public Paradero paradero;
+
+    private SwipeRefreshLayout swipeRefreshLayout;
 
 
     @Override
@@ -50,6 +54,9 @@ public class RecorridosParaderoActivity extends BaseActivity {
 
         TextView textView = (TextView)findViewById(R.id.header_titulo);
         textView.setText(String.format("Paradero %s", paradero.code));
+
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.recorridos_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(this);
 
         listView = (ListView) findViewById(R.id.recorridos_paradero_list_view);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -73,10 +80,43 @@ public class RecorridosParaderoActivity extends BaseActivity {
             btnFavorito.setBackgroundResource(R.drawable.btn_desguardar);
         }
 
+        load();
+        Utils.trackScreen(this, "recorridos-paradero");
+    }
+
+
+    public void onClick(View view)
+    {
+        Log.d("iTransantiago", "click....");
+        if(view.getId() == R.id.header_btn_back)
+        {
+            finish();
+        }
+        else if(view.getId() == R.id.header_btn_favorito)
+        {
+            Paradero found = Paradero.findByStopID(paradero.stopID);
+            if(found == null)
+            {
+                paradero.save();
+                btnFavorito.setBackgroundResource(R.drawable.btn_desguardar);
+            }
+            else
+            {
+                Paradero.deleteAll(Paradero.class, "stopID = ?", paradero.stopID);
+                btnFavorito.setBackgroundResource(R.drawable.btn_guardar);
+            }
+
+            Log.d("iTransantiago", "favorito");
+        }
+    }
+
+    private void load()
+    {
+
+        Utils.trackEvent(this, "VIEW", "paradero", paradero.code);
+
         String url = String
                 .format("%s&paradero=%s", Config.URL_PREDICCION, paradero.code);
-
-        Log.d("iTransantiago", url);
 
         final ProgressDialog dialog = ProgressDialog.show(this,
                 "iTransantiago", "Cargando");
@@ -139,7 +179,7 @@ public class RecorridosParaderoActivity extends BaseActivity {
                     e.printStackTrace();
                 }
 
-
+                swipeRefreshLayout.setRefreshing(false);
                 dialog.dismiss();
 
             }
@@ -152,34 +192,13 @@ public class RecorridosParaderoActivity extends BaseActivity {
         });
         // Add the request to the RequestQueue.
         queue.add(request);
-
-        Utils.trackScreen(this, "recorridos-paradero");
-    }
-
-    public void onClick(View view)
-    {
-        Log.d("iTransantiago", "click....");
-        if(view.getId() == R.id.header_btn_back)
-        {
-            finish();
-        }
-        else if(view.getId() == R.id.header_btn_favorito)
-        {
-            Paradero found = Paradero.findByStopID(paradero.stopID);
-            if(found == null)
-            {
-                paradero.save();
-                btnFavorito.setBackgroundResource(R.drawable.btn_desguardar);
-            }
-            else
-            {
-                Paradero.deleteAll(Paradero.class, "stopID = ?", paradero.stopID);
-                btnFavorito.setBackgroundResource(R.drawable.btn_guardar);
-            }
-
-            Log.d("iTransantiago", "favorito");
-        }
     }
 
 
+    @Override
+    public void onRefresh() {
+
+        load();
+
+    }
 }

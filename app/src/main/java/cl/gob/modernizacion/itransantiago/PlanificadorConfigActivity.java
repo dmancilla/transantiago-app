@@ -24,7 +24,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import cl.magnesia.itransantiago.R;
 import cl.gob.modernizacion.itransantiago.misc.MyLocationListener;
 
 import static cl.gob.modernizacion.itransantiago.Config.TAG;
@@ -79,9 +78,6 @@ public class PlanificadorConfigActivity extends BaseActivity implements View.OnF
 
 	public void onClick(View view) {
 
-		Log.d(TAG, "view. " + view.getClass());
-		Log.d(TAG, "view. " + view.getId());
-
         if( view.getId() == R.id.header_btn_close)
         {
             finish();
@@ -128,6 +124,8 @@ public class PlanificadorConfigActivity extends BaseActivity implements View.OnF
 
         else {
 
+            Log.d(TAG, "Planificador búsqueda");
+
             LatLng latLng = null;
             if(origenGPS || destinoGPS)
             {
@@ -147,9 +145,6 @@ public class PlanificadorConfigActivity extends BaseActivity implements View.OnF
             if(destino.length() == 0)
                 destino = null;
 
-            // origen = "Vergara 471";
-            // destino = "Vicuña Mackenna 6000";
-
 			if (null == origen && !origenGPS) {
 				Utils.errorDialog(this,
 						"Debe ingresar una dirección de origen.");
@@ -161,10 +156,8 @@ public class PlanificadorConfigActivity extends BaseActivity implements View.OnF
 				return;
 			}
 
-			Log.d("iTransantiago", "ruta. " + origen + " => " + destino);
-
-			// String origen = "Vergara 471";
-			// String destino = "Sim�n Bol�var 5000";
+			Log.d(TAG, "-- Buscar ruta. " + origen + " / " + destino);
+            Utils.trackEvent(this, "planificador", "búsqueda", origen + " / " + destino);
 
             runOnUiThread(new Runnable() {
                 @Override
@@ -181,7 +174,8 @@ public class PlanificadorConfigActivity extends BaseActivity implements View.OnF
 
                 if(origenGPS)
                 {
-                    Log.d("iTransantiago", "usando origenGPS");
+
+                    Log.d(TAG, String.format("-- Usando origen GPS. (%.4f, %.4f)", latLng.latitude, latLng.longitude));
                     latLngOrigen = latLng;
                 }
                 else
@@ -201,7 +195,7 @@ public class PlanificadorConfigActivity extends BaseActivity implements View.OnF
 
                 if(destinoGPS)
                 {
-                    Log.d("iTransantiago", "usando destinoGPS");
+                    Log.d(TAG, String.format("-- Usando destino GPS. (%.4f, %.4f)", latLng.latitude, latLng.longitude));
                     latLngDestino = latLng;
                 }
                 else
@@ -228,7 +222,8 @@ public class PlanificadorConfigActivity extends BaseActivity implements View.OnF
 						.format("http://itransantiago.modernizacion.gob.cl:8080/opentripplanner-api-webapp/ws/plan?fromPlace=%f,%f&toPlace=%f,%f&maxWalkDistance=1600",
 								latLngOrigen.latitude, latLngOrigen.longitude, latLngDestino.latitude, latLngDestino.longitude);
 
-				Log.d("iTransantiago", url);
+                Log.d(TAG, String.format("-- Desde. (%.4f, %.4f). Hasta . (%.4f, %.4f)", latLngOrigen.latitude, latLngOrigen.longitude, latLngDestino.latitude, latLngDestino.longitude));
+				Log.d(TAG, "-- Carga ruta. " + url);
 
 				// Request a string response from the provided URL.
 				JsonObjectRequest request = new JsonObjectRequest(Method.GET,
@@ -270,8 +265,6 @@ public class PlanificadorConfigActivity extends BaseActivity implements View.OnF
 
 		} else {
 
-			Log.d("iTransantiago", response.getClass().getName());
-
 			Intent data = new Intent();
 			data.putExtra("response", response.toString());
             data.putExtra("origen", origen);
@@ -286,7 +279,6 @@ public class PlanificadorConfigActivity extends BaseActivity implements View.OnF
     public void onFocusChange(View view, boolean hasFocus) {
         if(view.getId() == R.id.planificador_origen)
         {
-            Log.d("iTransantiago", "focus ORIGEN");
             if(origenGPS)
             {
                 textOrigen.setText("");
@@ -295,7 +287,6 @@ public class PlanificadorConfigActivity extends BaseActivity implements View.OnF
         }
         else if(view.getId() == R.id.planificador_destino)
         {
-            Log.d("iTransantiago", "focus DESTINO");
             if(destinoGPS)
             {
                 textDestino.setText("");

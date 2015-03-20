@@ -18,7 +18,7 @@ import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
 import com.google.maps.android.ui.SquareTextView;
 
-import cl.magnesia.itransantiago.R;
+import cl.gob.modernizacion.itransantiago.R;
 
 public class iTransantiagoRenderer<T extends MyItem> extends DefaultClusterRenderer<T> {
 

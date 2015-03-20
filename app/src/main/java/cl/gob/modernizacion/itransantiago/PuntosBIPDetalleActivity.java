@@ -17,7 +17,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
 
-import cl.magnesia.itransantiago.R;
+import cl.gob.modernizacion.itransantiago.R;
 import cl.gob.modernizacion.itransantiago.misc.SessionManager;
 import cl.gob.modernizacion.itransantiago.models.PuntoBIP;
 
@@ -70,6 +70,7 @@ public class PuntosBIPDetalleActivity extends BaseFragmentActivity {
         ((TextView)findViewById(R.id.puntos_bip_horario)).setText(puntoBIP.horario);
 
         Utils.trackScreen(this, "puntos bip!-detalle");
+        Utils.trackEvent(this, "VIEW", "punto bip!", puntoBIP.entidad + " / " + puntoBIP.direccion);
 
     }
 

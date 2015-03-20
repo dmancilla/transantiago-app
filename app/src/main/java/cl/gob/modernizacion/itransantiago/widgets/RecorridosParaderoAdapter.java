@@ -10,7 +10,7 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import cl.magnesia.itransantiago.R;
+import cl.gob.modernizacion.itransantiago.R;
 
 public class RecorridosParaderoAdapter extends ArrayAdapter<JSONObject> {
 

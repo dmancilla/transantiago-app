@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="cl.magnesia.itransantiago.PlanificadorActivity"
+    tools:context="cl.gob.modernizacion.itransantiago.PlanificadorActivity"
     tools:ignore="MissingPrefix" >
 
     <include layout="@layout/header" android:id="@+id/header" />

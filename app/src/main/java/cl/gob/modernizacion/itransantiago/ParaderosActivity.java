@@ -3,7 +3,7 @@ package cl.gob.modernizacion.itransantiago;
 import java.util.List;
 
 import cl.gob.modernizacion.itransantiago.misc.MyLocationListener;
-import cl.magnesia.itransantiago.R;
+import cl.gob.modernizacion.itransantiago.R;
 import cl.gob.modernizacion.itransantiago.db.MyDatabase;
 import cl.gob.modernizacion.itransantiago.misc.MyClusterOptionsProvider;
 

@@ -15,7 +15,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.io.IOException;
 import java.util.List;
 
-import cl.magnesia.itransantiago.R;
+import cl.gob.modernizacion.itransantiago.R;
 import cl.gob.modernizacion.itransantiago.misc.SessionManager;
 import cl.gob.modernizacion.itransantiago.models.Paradero;
 import cl.gob.modernizacion.itransantiago.models.Viaje;

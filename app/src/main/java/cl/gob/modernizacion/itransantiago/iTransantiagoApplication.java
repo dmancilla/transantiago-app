@@ -1,6 +1,6 @@
 package cl.gob.modernizacion.itransantiago;
 
-import cl.magnesia.itransantiago.R;
+import cl.gob.modernizacion.itransantiago.R;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import android.app.Application;
 import android.util.Log;
